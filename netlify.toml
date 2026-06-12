@@ -1,7 +1,6 @@
 [build]
-  base = "htt-platform"
-  command = "npm run build"
-  publish = "dist"
+  command = "cd htt-platform && npm run build"
+  publish = "htt-platform/dist"
 
 [[redirects]]
   from = "/*"
