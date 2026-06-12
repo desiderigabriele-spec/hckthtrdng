@@ -39,19 +39,25 @@ export default function Registrazione() {
     try {
       const { data, error: authError } = await supabase.auth.signUp({ email, password })
       if (authError) throw authError
-      if (data.user) {
-        const { error: dbError } = await supabase.from('users').insert({
-          id: data.user.id,
+
+      const userId = data.user?.id
+      if (userId) {
+        const { error: dbError } = await supabase.from('users').upsert({
+          id: userId,
           email,
           username,
           avatrade_verified: false,
           ruolo: 'viewer',
-        })
-        if (dbError) throw dbError
+        }, { onConflict: 'id' })
+        if (dbError && dbError.code !== '23505') throw dbError
       }
       setStep('avatrade')
     } catch (err: any) {
-      setError(err.message || 'Errore registrazione')
+      if (err.message?.includes('User already registered')) {
+        setError('> email già registrata. prova ad accedere.')
+      } else {
+        setError(err.message || '> errore di registrazione. riprova.')
+      }
     } finally {
       setLoading(false)
     }
