@@ -1,57 +1,62 @@
-import type { ReactNode, ButtonHTMLAttributes } from 'react'
+import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { motion } from 'framer-motion'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode
-  variant?: 'primary' | 'secondary' | 'danger' | 'amber'
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
+  children: ReactNode
   loading?: boolean
-  fullWidth?: boolean
 }
 
 export default function Button({
-  children,
   variant = 'primary',
   size = 'md',
+  children,
   loading = false,
-  fullWidth = false,
   className = '',
+  disabled,
   ...props
 }: ButtonProps) {
-  const variants = {
-    primary: 'bg-[#00FF41]/10 border border-[#00FF41] text-[#00FF41] hover:bg-[#00FF41]/20 shadow-[0_0_10px_rgba(0,255,65,0.3)]',
-    secondary: 'bg-transparent border border-gray-600 text-gray-300 hover:border-gray-400',
-    danger: 'bg-[#FF0033]/10 border border-[#FF0033] text-[#FF0033] hover:bg-[#FF0033]/20',
-    amber: 'bg-[#FFB800]/10 border border-[#FFB800] text-[#FFB800] hover:bg-[#FFB800]/20',
-  }
+  const base =
+    'inline-flex items-center justify-center gap-2 font-mono font-semibold uppercase tracking-widest transition-all duration-200 rounded border cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
 
   const sizes = {
     sm: 'px-3 py-1.5 text-xs',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-3 text-base',
+    md: 'px-6 py-2.5 text-sm',
+    lg: 'px-8 py-3 text-base',
+  }
+
+  const variants = {
+    primary:
+      'bg-[#00FF41]/10 border-[#00FF41] text-[#00FF41] hover:bg-[#00FF41]/20 hover:shadow-[0_0_20px_rgba(0,255,65,0.5)]',
+    secondary:
+      'bg-[#FFB800]/10 border-[#FFB800] text-[#FFB800] hover:bg-[#FFB800]/20 hover:shadow-[0_0_20px_rgba(255,184,0,0.5)]',
+    danger:
+      'bg-[#FF0033]/10 border-[#FF0033] text-[#FF0033] hover:bg-[#FF0033]/20 hover:shadow-[0_0_20px_rgba(255,0,51,0.5)]',
+    ghost:
+      'bg-transparent border-[#2A2A2A] text-gray-400 hover:border-[#00FF41]/40 hover:text-[#00FF41]',
   }
 
   return (
-    <motion.button
+    <motion.div
+      whileTap={{ scale: 0.97 }}
       whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className={`
-        font-mono font-medium rounded transition-all
-        ${variants[variant]}
-        ${sizes[size]}
-        ${fullWidth ? 'w-full' : ''}
-        ${loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}
-        ${className}
-      `}
-      disabled={loading || props.disabled}
-      {...(props as any)}
+      className="inline-flex"
     >
-      {loading ? (
-        <span className="flex items-center justify-center gap-2">
-          <span className="animate-spin">⠋</span>
-          <span>ELABORAZIONE...</span>
-        </span>
-      ) : children}
-    </motion.button>
+      <button
+        className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {loading ? (
+          <>
+            <span className="animate-pulse">{'>'}</span>
+            <span className="animate-pulse">...</span>
+          </>
+        ) : (
+          children
+        )}
+      </button>
+    </motion.div>
   )
 }

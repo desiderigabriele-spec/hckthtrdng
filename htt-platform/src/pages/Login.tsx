@@ -3,123 +3,116 @@ import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { supabase } from '../lib/supabase'
 import Button from '../components/ui/Button'
-import MatrixRain from '../components/layout/MatrixRain'
 
 export default function Login() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const navigate = useNavigate()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
     setError('')
-
+    setLoading(true)
     try {
-      const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
-      if (authError) throw authError
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) throw error
       navigate('/chat')
-    } catch (err: any) {
-      setError(err.message || 'Errore di accesso')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Errore di accesso'
+      setError(message)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center p-4 relative overflow-hidden">
-      <MatrixRain />
-
+    <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md relative z-10"
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-md"
       >
+        {/* Logo */}
         <div className="text-center mb-8">
-          <motion.h1
-            className="font-anton text-5xl text-[#00FF41] glow-green-text"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
+          <h1 className="font-display text-4xl text-[#00FF41] glow-green-text tracking-widest">
             HACK_THE
-          </motion.h1>
-          <motion.h1
-            className="font-anton text-5xl text-[#00FF41] glow-green-text"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
+          </h1>
+          <h1 className="font-display text-4xl text-[#00FF41] glow-green-text tracking-widest">
             TRADING
-          </motion.h1>
-          <motion.p
-            className="text-gray-500 font-mono text-xs mt-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-          >
-            {'>'} accesso sistema richiesto
-          </motion.p>
+          </h1>
+          <p className="text-gray-500 font-mono text-xs mt-2">v2.0.1 — SISTEMA OPERATIVO</p>
         </div>
 
-        <motion.div
-          className="bg-[#0D0D0D] border border-[#00FF41]/30 rounded-lg p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="text-[#00FF41] font-mono text-xs mb-4 opacity-60">
-            // AUTENTICAZIONE TERMINALE
+        {/* Terminal card */}
+        <div className="bg-[#0D0D0D] border border-[#00FF41]/30 rounded-lg p-6 shadow-[0_0_30px_rgba(0,255,65,0.1)]">
+          <div className="flex items-center gap-2 mb-6 pb-3 border-b border-[#00FF41]/20">
+            <div className="w-3 h-3 rounded-full bg-[#FF0033]" />
+            <div className="w-3 h-3 rounded-full bg-[#FFB800]" />
+            <div className="w-3 h-3 rounded-full bg-[#00FF41]" />
+            <span className="ml-2 font-mono text-xs text-gray-500">terminal — login.sh</span>
+          </div>
+
+          <div className="font-mono text-[#00FF41] text-sm mb-6">
+            <div className="text-gray-500">{`> autenticazione richiesta`}</div>
+            <div className="text-gray-500">{`> inserire credenziali...`}</div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-mono text-gray-400 mb-1">{'>'} EMAIL</label>
+              <label className="block font-mono text-xs text-gray-400 mb-1 uppercase tracking-wider">
+                Email
+              </label>
               <input
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="w-full bg-black/50 border border-[#00FF41]/20 rounded px-3 py-2 font-mono text-sm text-white focus:outline-none focus:border-[#00FF41] transition-colors"
-                placeholder="trader@htt.io"
+                onChange={(e) => setEmail(e.target.value)}
                 required
+                placeholder="user@htt.io"
+                className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded px-3 py-2.5 text-sm font-mono text-[#E5E5E5] placeholder-gray-600 focus:outline-none focus:border-[#00FF41]/50 focus:shadow-[0_0_10px_rgba(0,255,65,0.2)] transition-all"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-mono text-gray-400 mb-1">{'>'} PASSWORD</label>
+              <label className="block font-mono text-xs text-gray-400 mb-1 uppercase tracking-wider">
+                Password
+              </label>
               <input
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full bg-black/50 border border-[#00FF41]/20 rounded px-3 py-2 font-mono text-sm text-white focus:outline-none focus:border-[#00FF41] transition-colors"
-                placeholder="••••••••"
+                onChange={(e) => setPassword(e.target.value)}
                 required
+                placeholder="••••••••"
+                className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded px-3 py-2.5 text-sm font-mono text-[#E5E5E5] placeholder-gray-600 focus:outline-none focus:border-[#00FF41]/50 focus:shadow-[0_0_10px_rgba(0,255,65,0.2)] transition-all"
               />
             </div>
 
             {error && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-[#FF0033] text-xs font-mono bg-[#FF0033]/10 border border-[#FF0033]/30 rounded p-2"
-              >
-                {'>'} ERRORE: {error}
-              </motion.div>
+              <div className="bg-[#FF0033]/10 border border-[#FF0033]/40 rounded px-3 py-2 font-mono text-xs text-[#FF0033]">
+                {`> ERRORE: ${error}`}
+              </div>
             )}
 
-            <Button type="submit" loading={loading} fullWidth size="lg">
-              {'>'} ACCEDI AL SISTEMA
+            <Button type="submit" variant="primary" size="md" loading={loading} className="w-full mt-2">
+              ACCEDI AL SISTEMA
             </Button>
           </form>
 
-          <p className="text-center text-gray-500 text-xs font-mono mt-4">
-            Nessun accesso?{' '}
-            <Link to="/registrazione" className="text-[#00FF41] hover:underline">
-              REGISTRATI
-            </Link>
-          </p>
-        </motion.div>
+          <div className="mt-6 pt-4 border-t border-[#00FF41]/10 text-center">
+            <p className="font-mono text-xs text-gray-500">
+              Nessun accesso?{' '}
+              <Link
+                to="/registrazione"
+                className="text-[#00FF41] hover:underline transition-colors"
+              >
+                RICHIEDI ACCESSO
+              </Link>
+            </p>
+          </div>
+        </div>
       </motion.div>
     </div>
   )

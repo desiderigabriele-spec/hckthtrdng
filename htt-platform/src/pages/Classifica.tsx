@@ -1,99 +1,251 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Trophy, Zap, TrendingUp, Flame } from 'lucide-react'
+import { supabase } from '../lib/supabase'
+import { useAuth } from '../context/AuthContext'
 import { mockLeaderboard } from '../lib/mockData'
-import type { LeaderboardEntry, User } from '../types'
+import type { LeaderboardEntry } from '../types'
+import Badge from '../components/ui/Badge'
 
-const BADGES: Record<string, string> = { 1: 'TOP_TRADER', 2: 'ELITE', 3: 'RISING_STAR' }
-const PERIODS = ['alltime', 'monthly', 'weekly'] as const
+type Periodo = 'weekly' | 'monthly' | 'alltime'
 
-function CountUp({ value, decimals = 1 }: { value: number; decimals?: number }) {
-  const [display, setDisplay] = useState(0)
+function useCountUp(target: number, active: boolean) {
+  const [value, setValue] = useState(0)
   useEffect(() => {
-    let start = 0
-    const step = value / 40
-    const timer = setInterval(() => {
-      start += step
-      if (start >= value) { setDisplay(value); clearInterval(timer) } else { setDisplay(start) }
-    }, 20)
-    return () => clearInterval(timer)
-  }, [value])
-  return <span>{display.toFixed(decimals)}</span>
+    if (!active) { setValue(0); return }
+    const duration = 1200
+    const start = Date.now()
+    const frame = () => {
+      const elapsed = Date.now() - start
+      const progress = Math.min(elapsed / duration, 1)
+      setValue(Math.round(target * progress))
+      if (progress < 1) requestAnimationFrame(frame)
+    }
+    requestAnimationFrame(frame)
+  }, [target, active])
+  return value
 }
 
-export default function Classifica({ user }: { user: User | null }) {
-  const [period, setPeriod] = useState<typeof PERIODS[number]>('alltime')
-  const data: LeaderboardEntry[] = mockLeaderboard
+const medalColors: Record<number, string> = {
+  1: 'text-yellow-400',
+  2: 'text-gray-300',
+  3: 'text-orange-400',
+}
 
-  const top3 = data.slice(0, 3)
-  const rest = data.slice(3)
+function PodiumCard({ entry, position }: { entry: LeaderboardEntry; position: number }) {
+  const [active, setActive] = useState(false)
+  const pips = useCountUp(entry.pips_totali, active)
+  const winRate = useCountUp(Math.round(entry.win_rate * 10), active) / 10
+
+  useEffect(() => {
+    const t = setTimeout(() => setActive(true), position * 200)
+    return () => clearTimeout(t)
+  }, [position])
+
+  const colors = ['border-yellow-400/60 shadow-[0_0_20px_rgba(255,215,0,0.3)]', 'border-gray-400/40', 'border-orange-400/40']
+  const heights = ['h-24', 'h-16', 'h-12']
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 max-w-2xl mx-auto">
-      <div className="flex items-center gap-3 mb-6 pt-4">
-        <Trophy className="text-[#FFB800]" size={24} />
-        <h1 className="font-display text-3xl text-white">CLASSIFICA</h1>
-        <div className="flex-1" />
-        <div className="flex gap-1">
-          {PERIODS.map(p => (
-            <button key={p} onClick={() => setPeriod(p)} className={`font-mono text-[10px] px-3 py-1 rounded border transition-all ${period === p ? 'border-[#00FF41] text-[#00FF41] bg-[#00FF41]/10' : 'border-[#2A2A2A] text-gray-500 hover:border-[#00FF41]/30'}`}>
-              {p === 'alltime' ? 'ALL TIME' : p === 'monthly' ? 'MESE' : 'SETTIMANA'}
-            </button>
-          ))}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: position * 0.15 }}
+      className={`flex flex-col items-center gap-2`}
+    >
+      {/* Avatar */}
+      <div className={`w-14 h-14 rounded-full border-2 ${colors[position - 1]} bg-[#1A1A1A] flex items-center justify-center`}>
+        <span className={`font-mono text-lg font-bold ${medalColors[position]}`}>
+          {entry.users?.username?.slice(0, 2).toUpperCase()}
+        </span>
+      </div>
+
+      {/* Username */}
+      <span className={`font-mono text-xs ${medalColors[position]} uppercase tracking-wider`}>
+        {entry.users?.username}
+      </span>
+
+      {/* Stats */}
+      <div className="text-center">
+        <p className="font-mono text-sm text-[#00FF41] font-bold">{pips} pips</p>
+        <p className="font-mono text-xs text-gray-500">{winRate.toFixed(1)}% WR</p>
+      </div>
+
+      {/* Podium block */}
+      <div className={`w-20 ${heights[position - 1]} bg-gradient-to-t ${
+        position === 1 ? 'from-yellow-600/30 to-yellow-400/10 border-t-2 border-yellow-400/60' :
+        position === 2 ? 'from-gray-600/20 to-gray-400/5 border-t-2 border-gray-400/40' :
+        'from-orange-700/20 to-orange-400/5 border-t-2 border-orange-400/40'
+      } flex items-center justify-center rounded-t`}>
+        <span className={`font-display text-2xl ${medalColors[position]}`}>
+          {position === 1 ? '1' : position === 2 ? '2' : '3'}
+        </span>
+      </div>
+    </motion.div>
+  )
+}
+
+function LeaderboardRow({ entry, index, isMe }: { entry: LeaderboardEntry; index: number; isMe: boolean }) {
+  const [active, setActive] = useState(false)
+  const pips = useCountUp(entry.pips_totali, active)
+
+  useEffect(() => {
+    const t = setTimeout(() => setActive(true), index * 60)
+    return () => clearTimeout(t)
+  }, [index])
+
+  return (
+    <motion.tr
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.04 }}
+      className={`border-b border-[#2A2A2A] hover:bg-[#1A1A1A]/50 transition-colors ${
+        isMe ? 'border-l-2 border-l-[#00FF41] bg-[#00FF41]/5' : ''
+      }`}
+    >
+      <td className="px-4 py-3">
+        <Badge rank={entry.rank} />
+      </td>
+      <td className="px-4 py-3">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-full bg-[#1A1A1A] border border-[#00FF41]/20 flex items-center justify-center">
+            <span className="font-mono text-xs text-[#00FF41]">
+              {entry.users?.username?.slice(0, 2).toUpperCase()}
+            </span>
+          </div>
+          <span className={`font-mono text-sm ${isMe ? 'text-[#00FF41]' : 'text-[#E5E5E5]'}`}>
+            {entry.users?.username}
+          </span>
         </div>
+      </td>
+      <td className="px-4 py-3 hidden sm:table-cell">
+        <Badge winRate={entry.win_rate} />
+      </td>
+      <td className="px-4 py-3">
+        <span className="font-mono text-sm text-[#00FF41]">{pips}</span>
+      </td>
+      <td className="px-4 py-3 hidden md:table-cell">
+        <span className={`font-mono text-sm ${entry.streak_attuale > 0 ? 'text-[#FFB800]' : 'text-gray-500'}`}>
+          {entry.streak_attuale > 0 ? `${entry.streak_attuale}x` : '-'}
+        </span>
+      </td>
+      <td className="px-4 py-3 hidden lg:table-cell">
+        <Badge role={entry.users?.ruolo} />
+      </td>
+    </motion.tr>
+  )
+}
+
+export default function Classifica() {
+  const { user } = useAuth()
+  const [periodo, setPeriodo] = useState<Periodo>('alltime')
+  const [entries, setEntries] = useState<LeaderboardEntry[]>(mockLeaderboard)
+  const [loading, setLoading] = useState(false)
+  const fetchedRef = useRef(false)
+
+  useEffect(() => {
+    if (fetchedRef.current) return
+    fetchedRef.current = true
+    const fetchLeaderboard = async () => {
+      setLoading(true)
+      try {
+        const { data, error } = await supabase
+          .from('leaderboard')
+          .select('*, users(*)')
+          .eq('periodo', periodo)
+          .order('rank', { ascending: true })
+          .limit(50)
+        if (!error && data && data.length > 0) {
+          setEntries(data as LeaderboardEntry[])
+        }
+      } catch {
+        // Use mock data on error
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchLeaderboard()
+  }, [periodo])
+
+  const top3 = entries.slice(0, 3)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-[#0D0D0D] p-4"
+    >
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="font-display text-3xl text-[#00FF41] tracking-widest glow-green-text">
+          CLASSIFICA
+        </h1>
+        <p className="font-mono text-xs text-gray-500 mt-1">{`> leaderboard globale — top traders`}</p>
       </div>
 
-      {/* Podio top 3 */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        {[top3[1], top3[0], top3[2]].map((entry, idx) => {
-          if (!entry) return null
-          const positions = [2, 1, 3]
-          const pos = positions[idx]
-          const colors = { 1: '#FFB800', 2: '#888888', 3: '#CD7F32' }
-          const color = colors[pos as 1 | 2 | 3]
-          return (
-            <motion.div key={entry.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: pos === 1 ? -10 : 0 }} transition={{ delay: idx * 0.1 }}
-              className={`bg-[#1A1A1A] border rounded p-3 text-center ${pos === 1 ? 'border-[#FFB800]/50' : 'border-[#2A2A2A]'}`}
-              style={{ boxShadow: pos === 1 ? '0 0 20px rgba(255,184,0,0.2)' : undefined }}>
-              <div className="font-display text-2xl mb-1" style={{ color }}>{pos === 1 ? '🥇' : pos === 2 ? '🥈' : '🥉'}</div>
-              <div className="font-mono text-xs text-white font-bold truncate">{entry.users?.username}</div>
-              <div className="font-mono text-xs mt-1" style={{ color }}><CountUp value={entry.win_rate} />%</div>
-              <div className="font-mono text-[10px] text-gray-500"><CountUp value={entry.pips_totali} decimals={0} /> pips</div>
-            </motion.div>
-          )
-        })}
+      {/* Tabs */}
+      <div className="flex gap-2 mb-6">
+        {(['weekly', 'monthly', 'alltime'] as Periodo[]).map((p) => (
+          <button
+            key={p}
+            onClick={() => { setPeriodo(p); fetchedRef.current = false }}
+            className={`font-mono text-xs px-4 py-2 rounded border uppercase tracking-wider transition-all ${
+              periodo === p
+                ? 'bg-[#00FF41]/10 border-[#00FF41]/60 text-[#00FF41]'
+                : 'bg-transparent border-[#2A2A2A] text-gray-500 hover:border-[#00FF41]/30 hover:text-[#00FF41]'
+            }`}
+          >
+            {p === 'weekly' ? 'Settimanale' : p === 'monthly' ? 'Mensile' : 'All Time'}
+          </button>
+        ))}
       </div>
 
-      {/* Lista resto */}
-      <div className="space-y-2">
-        {rest.map((entry, idx) => {
-          const isMe = user && entry.user_id === user.id
-          return (
-            <motion.div key={entry.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }}
-              className={`flex items-center gap-3 p-3 rounded border transition-all ${isMe ? 'border-[#00FF41]/50 bg-[#00FF41]/5' : 'border-[#2A2A2A] bg-[#1A1A1A]'}`}>
-              <span className="font-mono text-sm text-gray-500 w-6 text-center">#{entry.rank}</span>
-              <div className="w-8 h-8 rounded bg-[#0D0D0D] border border-[#2A2A2A] flex items-center justify-center">
-                <span className="font-mono text-xs text-[#00FF41]">{(entry.users?.username || 'U').slice(0, 2).toUpperCase()}</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className={`font-mono text-sm font-bold ${isMe ? 'text-[#00FF41]' : 'text-white'}`}>{entry.users?.username}</span>
-                  {BADGES[entry.rank] && <span className="font-mono text-[9px] text-[#FFB800] border border-[#FFB800]/30 px-1 rounded">{BADGES[entry.rank]}</span>}
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="font-mono text-sm text-[#00FF41] flex items-center gap-1 justify-end">
-                  <TrendingUp size={12} /><CountUp value={entry.win_rate} />%
-                </div>
-                <div className="font-mono text-[10px] text-gray-500 flex items-center gap-1 justify-end">
-                  <Zap size={10} /><CountUp value={entry.pips_totali} decimals={0} />p
-                  {entry.streak_attuale > 0 && <><Flame size={10} className="text-[#FF0033] ml-1" />{entry.streak_attuale}</>}
-                </div>
-              </div>
-            </motion.div>
-          )
-        })}
-      </div>
+      {loading ? (
+        <div className="font-mono text-[#00FF41] text-sm text-center py-8 animate-pulse">
+          {`> caricamento classifica...`}
+        </div>
+      ) : (
+        <>
+          {/* Podium */}
+          {top3.length === 3 && (
+            <div className="mb-8 flex items-end justify-center gap-4">
+              {/* 2nd */}
+              <PodiumCard entry={top3[1]} position={2} />
+              {/* 1st */}
+              <PodiumCard entry={top3[0]} position={1} />
+              {/* 3rd */}
+              <PodiumCard entry={top3[2]} position={3} />
+            </div>
+          )}
+
+          {/* Full table */}
+          <div className="bg-[#0D0D0D] border border-[#00FF41]/20 rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-[#00FF41]/20 text-left">
+                    <th className="px-4 py-3 font-mono text-xs text-gray-500 uppercase tracking-wider">Rank</th>
+                    <th className="px-4 py-3 font-mono text-xs text-gray-500 uppercase tracking-wider">Trader</th>
+                    <th className="px-4 py-3 font-mono text-xs text-gray-500 uppercase tracking-wider hidden sm:table-cell">Win Rate</th>
+                    <th className="px-4 py-3 font-mono text-xs text-gray-500 uppercase tracking-wider">Pips</th>
+                    <th className="px-4 py-3 font-mono text-xs text-gray-500 uppercase tracking-wider hidden md:table-cell">Streak</th>
+                    <th className="px-4 py-3 font-mono text-xs text-gray-500 uppercase tracking-wider hidden lg:table-cell">Ruolo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {entries.map((entry, i) => (
+                    <LeaderboardRow
+                      key={entry.id}
+                      entry={entry}
+                      index={i}
+                      isMe={entry.user_id === user?.id}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
     </motion.div>
   )
 }

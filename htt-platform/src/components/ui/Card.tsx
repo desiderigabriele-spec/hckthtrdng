@@ -1,27 +1,37 @@
-import type { ReactNode } from 'react'
-import { motion } from 'framer-motion'
+import type { ReactNode, MouseEventHandler } from 'react'
 
 interface CardProps {
   children: ReactNode
   className?: string
   glow?: boolean
-  hover?: boolean
-  onClick?: () => void
+  amber?: boolean
+  red?: boolean
+  onClick?: MouseEventHandler<HTMLDivElement>
 }
 
-export default function Card({ children, className = '', glow = false, hover = false, onClick }: CardProps) {
+export default function Card({ children, className = '', glow = false, amber = false, red = false, onClick }: CardProps) {
+  let borderClass = 'border-[#00FF41]/20'
+  let shadowClass = ''
+
+  if (glow) {
+    borderClass = 'border-[#00FF41]/60'
+    shadowClass = 'shadow-[0_0_15px_rgba(0,255,65,0.2)]'
+  }
+  if (amber) {
+    borderClass = 'border-[#FFB800]/40'
+    shadowClass = 'shadow-[0_0_15px_rgba(255,184,0,0.2)]'
+  }
+  if (red) {
+    borderClass = 'border-[#FF0033]/40'
+    shadowClass = 'shadow-[0_0_15px_rgba(255,0,51,0.2)]'
+  }
+
   return (
-    <motion.div
-      whileHover={hover ? { scale: 1.01 } : undefined}
+    <div
+      className={`bg-[#0D0D0D] border rounded-lg ${borderClass} ${shadowClass} ${className}`}
       onClick={onClick}
-      className={`
-        bg-[#0D0D0D] border border-[#00FF41]/20 rounded-lg p-4
-        ${glow ? 'shadow-[0_0_15px_rgba(0,255,65,0.2)]' : ''}
-        ${hover ? 'cursor-pointer hover:border-[#00FF41]/50 transition-all' : ''}
-        ${className}
-      `}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
