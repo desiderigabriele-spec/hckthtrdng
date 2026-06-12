@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Eye, EyeOff } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import MatrixRain from '../components/layout/MatrixRain'
 
@@ -18,6 +19,7 @@ export default function Registrazione() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [avatradeId, setAvatradeId] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -108,7 +110,12 @@ export default function Registrazione() {
                   </div>
                   <div>
                     <label className="font-mono text-xs text-gray-400 block mb-1">PASSWORD</label>
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} className="w-full bg-black/50 border border-[#2A2A2A] focus:border-[#00FF41] text-white font-mono text-sm px-3 py-2 rounded outline-none" placeholder="min. 6 caratteri" />
+                    <div className="relative">
+                      <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={6} className="w-full bg-black/50 border border-[#2A2A2A] focus:border-[#00FF41] text-white font-mono text-sm px-3 py-2 pr-10 rounded outline-none" placeholder="min. 6 caratteri" />
+                      <button type="button" onClick={() => setShowPassword(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#00FF41] transition-colors">
+                        {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                      </button>
+                    </div>
                   </div>
                   <button type="submit" disabled={loading} className="w-full bg-[#00FF41] text-[#0D0D0D] font-display text-lg py-3 rounded disabled:opacity-50 hover:shadow-[0_0_20px_rgba(0,255,65,0.4)] transition-all">
                     {loading ? '> elaborazione...' : 'CONTINUA'}
