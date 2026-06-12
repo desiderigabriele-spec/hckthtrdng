@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HACK_THE_TRADING — Design System + Sfida Live</title>
+<link rel="stylesheet" href="htt.css?v=5">
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#0D0D0D">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0D0D0D"/>
+    <text x="600" y="360" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="190" font-weight="700" fill="#00FF41" style="filter:drop-shadow(0 0 24px rgba(0,255,65,.5))">&gt;_</text>
+    <text x="600" y="500" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="52" letter-spacing="14" fill="#E5E5E5">HACK_THE_TRADING</text>
+    <text x="600" y="560" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="30" fill="#888888">decode the market.</text>
+  </svg>
+</template>
+<canvas id="matrix"></canvas>
+<div class="fx-vignette"></div>
+<div class="fx-scanlines"></div>
+
+<!-- icon defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="i-chat"><path d="M3 4h18v12H8l-4 4V4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></g>
+  <g id="i-sfide"><path d="M4 4l9 9M14 4l6 0 0 6M20 4l-7 7M4 16l5 5M9 16l-5 5M14 20l6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="i-rank"><path d="M5 20V11M12 20V5M19 20v-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="i-signal"><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M7.5 7.5a6 6 0 000 9M16.5 7.5a6 6 0 010 9M4.7 4.7a10 10 0 000 14.6M19.3 4.7a10 10 0 010 14.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
+  <g id="i-user"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 20a7 7 0 0114 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+</defs></svg>
+
+<div class="page">
+
+  <!-- ===================== BOOT / BRIEF ===================== -->
+  <header class="boot">
+    <div class="eyebrow reveal" style="animation-delay:.05s">build step 01 — design system + demo</div>
+    <h1 class="logo-wordmark reveal" style="animation-delay:.12s">H<span class="v">A</span>CK<span class="sep">_</span>TH<span class="v">E</span><span class="sep">_</span>TR<span class="v">A</span>D<span class="v">I</span>NG</h1>
+    <div class="tagline reveal" style="animation-delay:.22s">&gt; decode the market.<span class="cursor"></span></div>
+    <div id="bootlines" class="bootlines"></div>
+
+    <div class="brief">
+      <div class="cell reveal" style="animation-delay:.3s"><div class="k">estetica</div><div class="val g">terminale hacker premium</div></div>
+      <div class="cell reveal" style="animation-delay:.36s"><div class="k">effetti</div><div class="val">bilanciati / leggibili</div></div>
+      <div class="cell reveal" style="animation-delay:.42s"><div class="k">demo</div><div class="val">modulo 03 · sfida live 1v1</div></div>
+      <div class="cell reveal" style="animation-delay:.48s"><div class="k">target</div><div class="val">desktop + mobile</div></div>
+    </div>
+  </header>
+
+  <!-- ===================== DESIGN SYSTEM ===================== -->
+  <section class="section">
+    <div class="sec-label">design system — fondamenta</div>
+
+    <div class="ds-grid">
+
+      <!-- identity / mascot -->
+      <div class="panel col-5">
+        <div class="panel-head"><span>identity / mascotte</span><span class="tag">null_mask</span></div>
+        <div class="panel-body">
+          <div class="mask-wrap">
+<pre class="ascii">   .--------------------.
+   |   ____      ____   |
+   |  |    |    |    |  |
+   |  | [] |    | [] |  |
+   |  |____|    |____|  |
+   |                    |
+   |     .--------.     |
+   |     |//////// |    |
+   |     '--------'     |
+   '--------------------'</pre>
+            <div class="mask-name"><b>NULL_MASK</b> · v0.1</div>
+          </div>
+          <div style="margin-top:18px; border-top:1px dashed var(--border); padding-top:16px;">
+            <div class="type-row" style="padding:0">
+              <div class="lab">wordmark · vocali al 10%</div>
+              <div style="font-family:var(--display); font-size:38px; letter-spacing:.04em; color:var(--text-primary);">
+                H<span style="opacity:.1">A</span>CK<span style="color:var(--terminal-green);opacity:.6">_</span>TH<span style="opacity:.1">E</span><span style="color:var(--terminal-green);opacity:.6">_</span>TR<span style="opacity:.1">A</span>D<span style="opacity:.1">I</span>NG
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- palette -->
+      <div class="panel col-7">
+        <div class="panel-head"><span>palette</span><span class="tag">9 token</span></div>
+        <div class="panel-body">
+          <div class="swatches">
+            <div class="swatch"><div class="chip" style="background:#0D0D0D;border-bottom:1px solid var(--border)"></div><div class="meta"><div class="nm">bg-primary</div><div class="hx">#0D0D0D</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#1A1A1A"></div><div class="meta"><div class="nm">bg-secondary</div><div class="hx">#1A1A1A</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#0F2010"></div><div class="meta"><div class="nm">bg-highlight</div><div class="hx">#0F2010</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#00FF41;box-shadow:inset 0 0 24px rgba(0,0,0,.2)"></div><div class="meta"><div class="nm">terminal-green</div><div class="hx">#00FF41</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#FFB800"></div><div class="meta"><div class="nm">amber</div><div class="hx">#FFB800</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#FF0033"></div><div class="meta"><div class="nm">red</div><div class="hx">#FF0033</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#E5E5E5"></div><div class="meta"><div class="nm">text-primary</div><div class="hx">#E5E5E5</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#888888"></div><div class="meta"><div class="nm">text-dim</div><div class="hx">#888888</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#2A2A2A"></div><div class="meta"><div class="nm">border</div><div class="hx">#2A2A2A</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- typography -->
+      <div class="panel col-12">
+        <div class="panel-head"><span>tipografia</span><span class="tag">bebas primario · anton d'impatto · inter · mono</span></div>
+        <div class="panel-body">
+          <div class="ds-grid" style="gap:0 28px;">
+            <div class="col-6">
+              <div class="type-row" style="padding-top:0">
+                <div class="lab">display primario — bebas neue <span style="color:var(--green-dim)">/ usato ovunque</span></div>
+                <div class="spec-bebas">DECODE THE MARKET</div>
+              </div>
+              <div class="type-row">
+                <div class="lab">display d'impatto — anton <span style="color:var(--amber)">/ solo VS &amp; vittoria</span></div>
+                <div class="spec-anton">VS &nbsp; WINNER</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="type-row" style="padding-top:0">
+                <div class="lab">body · inter</div>
+                <div class="spec-inter">Estetica hacker spettacolare, uso semplicissimo. La complessità è solo estetica, mai funzionale — ogni schermata ha un'azione principale chiara.</div>
+              </div>
+              <div class="type-row">
+                <div class="lab">dati / numeri / codice · jetbrains mono</div>
+                <div class="spec-mono">+312.4 PIPS · 87% WR · XAU/USD</div>
+                <div class="glyphset">0123456789 ▮ &gt; _ // { } [ ] $ # = → ●</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- components -->
+      <div class="panel col-7">
+        <div class="panel-head"><span>componenti</span><span class="tag">base</span></div>
+        <div class="panel-body">
+          <div class="stack">
+            <div>
+              <div class="lab" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--text-faint);text-transform:uppercase;margin-bottom:10px;">azioni — un'azione principale per schermata</div>
+              <div class="wrap">
+                <button class="btn btn-primary">+ Nuova sfida</button>
+                <button class="btn">Profilo</button>
+                <button class="btn btn-danger">Abbandona</button>
+              </div>
+            </div>
+            <div>
+              <div class="lab" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--text-faint);text-transform:uppercase;margin-bottom:10px;">stati & badge</div>
+              <div class="wrap">
+                <span class="pill buy">▲ BUY</span>
+                <span class="pill sell">▼ SELL</span>
+                <span class="pill live"><span class="ld"></span> LIVE</span>
+                <span class="badge top">★ TOP_TRADER</span>
+                <span class="badge rise">↑ RISING_STAR</span>
+                <span class="badge streak">⚡ STREAK_MASTER</span>
+              </div>
+            </div>
+            <div>
+              <div class="lab" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--text-faint);text-transform:uppercase;margin-bottom:10px;">input terminale</div>
+              <div class="field-row">
+                <span class="prompt">&gt;</span>
+                <input class="field" value="username_avatrade" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- effects -->
+      <div class="panel col-5">
+        <div class="panel-head"><span>effetti cinematografici</span><span class="tag">bilanciati</span></div>
+        <div class="panel-body">
+          <div style="font-family:var(--mono);font-size:13px;line-height:2.05;color:var(--text-dim);">
+            <div><span class="green">✓</span> matrix rain · opacità ~7% <span class="dim">(live, sfondo)</span></div>
+            <div><span class="green">✓</span> scanline overlay sottile</div>
+            <div><span class="green">✓</span> glow verde su CTA e leader</div>
+            <div><span class="green">✓</span> typewriter sui titoli chiave</div>
+            <div><span class="green">✓</span> cursore a blocco lampeggiante <span class="cursor" style="display:inline-block;width:1ch"></span></div>
+            <div><span class="green">✓</span> count-up animato sui numeri</div>
+          </div>
+          <div style="margin-top:16px;border-top:1px dashed var(--border);padding-top:14px;font-family:var(--mono);font-size:12px;color:var(--text-faint);">
+            regola: l'estetica non rallenta mai l'uso. Se un'animazione disturba la lettura, si accorcia.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== DEMO — SFIDA LIVE ===================== -->
+  <section class="section">
+    <div class="sec-label">demo — modulo 03 · sfida live 1v1</div>
+
+    <div class="demo-stage">
+
+      <!-- ============ DESKTOP ============ -->
+      <div>
+        <div class="frame-cap">desktop · sidebar layout</div>
+        <div class="win">
+          <div class="win-bar">
+            <div class="dot-row"><span class="dot r"></span><span class="dot a"></span><span class="dot g"></span></div>
+            <div class="url">htt://<b>sfide/live</b> · xau-usd · 1v1</div>
+          </div>
+          <div class="app">
+            <!-- sidebar -->
+            <aside class="side">
+              <div class="brand">H<span class="v">A</span>CK<span class="sep">_</span>T<span class="v">E</span>RM</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24"><use href="#i-chat"/></svg> Chat</div>
+              <div class="nav-item active"><svg viewBox="0 0 24 24"><use href="#i-sfide"/></svg> Sfide</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24"><use href="#i-rank"/></svg> Classifica</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24"><use href="#i-signal"/></svg> Segnali</div>
+              <div class="nav-item"><svg viewBox="0 0 24 24"><use href="#i-user"/></svg> Profilo</div>
+              <div class="spacer"></div>
+              <div class="me">
+                <div class="av">N</div>
+                <div><div class="nm">NULL_MASK</div><div class="rk">#02 · verified</div></div>
+              </div>
+            </aside>
+
+            <!-- main -->
+            <div class="main">
+              <canvas class="rain-bg"></canvas>
+              <div class="topbar">
+                <div class="title">
+                  <h2>Sfida Live</h2>
+                  <span class="chip">XAU/USD</span>
+                  <span class="pill live"><span class="ld"></span> LIVE</span>
+                </div>
+                <div class="countdown">tempo rimasto <b data-role="clock">14:23:41</b></div>
+              </div>
+
+              <div class="arena">
+                <div class="vs-grid">
+                  <!-- trader A -->
+                  <div class="tcard leader" data-card="a">
+                    <div class="phead">
+                      <div class="avatar green"><span class="g">N</span></div>
+                      <div>
+                        <div class="uname">NEØN_WOLF</div>
+                        <div class="uline"><span class="badge top">★ TOP_TRADER</span><span class="dim mono" style="font-size:11px">#02</span></div>
+                      </div>
+                    </div>
+                    <div class="bigpips"><span data-role="pips-a">312.4</span><span class="u">pips</span></div>
+                    <div class="pips-sub">conto demo · verificato avatrade</div>
+                    <div class="leadflag" data-role="flag-a">in testa</div>
+                    <div class="tstats">
+                      <div class="tstat"><div class="v up">87%</div><div class="k">win rate</div></div>
+                      <div class="tstat"><div class="v">W12</div><div class="k">streak</div></div>
+                      <div class="tstat"><div class="v">9.840</div><div class="k">pips tot</div></div>
+                    </div>
+                  </div>
+
+                  <!-- center -->
+                  <div class="vsmid">
+                    <div class="seam"></div>
+                    <div class="vs">VS</div>
+                    <div class="seam"></div>
+                  </div>
+
+                  <!-- trader B -->
+                  <div class="tcard right challenger" data-card="b">
+                    <div class="phead">
+                      <div class="avatar amber"><span class="g">V</span></div>
+                      <div>
+                        <div class="uname">V0ID_RUNNER</div>
+                        <div class="uline"><span class="badge rise">↑ RISING_STAR</span><span class="dim mono" style="font-size:11px">#05</span></div>
+                      </div>
+                    </div>
+                    <div class="bigpips"><span data-role="pips-b">286.1</span><span class="u">pips</span></div>
+                    <div class="pips-sub">conto demo · verificato avatrade</div>
+                    <div class="leadflag" data-role="flag-b">in testa</div>
+                    <div class="tstats">
+                      <div class="tstat"><div class="v up">79%</div><div class="k">win rate</div></div>
+                      <div class="tstat"><div class="v">W6</div><div class="k">streak</div></div>
+                      <div class="tstat"><div class="v">7.215</div><div class="k">pips tot</div></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- comparison bar -->
+                <div class="cmp">
+                  <div class="cap"><span style="color:var(--terminal-green)">NEØN_WOLF</span><span>confronto pips · live</span><span style="color:var(--amber)">V0ID_RUNNER</span></div>
+                  <div class="bar"><span class="a" data-role="bar-a" style="width:52%"></span><span class="b" data-role="bar-b" style="width:48%"></span></div>
+                  <div class="pct"><span class="l" data-role="pct-a">52%</span><span class="r" data-role="pct-b">48%</span></div>
+                </div>
+
+                <!-- tick log -->
+                <div class="ticklog">
+                  <div class="lh">// live feed — esecuzioni conto demo</div>
+                  <div class="feed" data-role="feed"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ MOBILE ============ -->
+      <div>
+        <div class="frame-cap">mobile · bottom nav</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span>9:41</span>
+              <span class="r"><span class="green">●</span> HTT_NET</span>
+            </div>
+            <div class="m-top">
+              <div class="blogo">H<span class="v">A</span>CK<span class="sep">_</span>T<span class="v">E</span>RM</div>
+              <span class="pill live"><span class="ld"></span> LIVE</span>
+            </div>
+
+            <div class="m-body">
+              <canvas class="rain-bg"></canvas>
+              <div class="m-meta">
+                <span class="chip">XAU/USD · 1v1</span>
+                <span class="countdown" style="font-size:12px"><b data-role="clock">14:23:41</b></span>
+              </div>
+
+              <!-- trader A -->
+              <div class="m-card leader" data-card="a">
+                <div class="row1">
+                  <div class="av green"><span class="g">N</span></div>
+                  <div>
+                    <div class="un">NEØN_WOLF</div>
+                    <div style="margin-top:4px"><span class="badge top" style="font-size:9px">★ TOP_TRADER</span></div>
+                  </div>
+                  <div class="bp"><span data-role="pips-a">312.4</span></div>
+                </div>
+                <div class="ministats">
+                  <div><div class="v">87%</div><div class="k">win rate</div></div>
+                  <div><div class="v">W12</div><div class="k">streak</div></div>
+                  <div><div class="v">9.840</div><div class="k">pips tot</div></div>
+                </div>
+              </div>
+
+              <div class="m-vs">VS</div>
+
+              <!-- trader B -->
+              <div class="m-card challenger" data-card="b">
+                <div class="row1">
+                  <div class="av amber"><span class="g">V</span></div>
+                  <div>
+                    <div class="un">V0ID_RUNNER</div>
+                    <div style="margin-top:4px"><span class="badge rise" style="font-size:9px">↑ RISING_STAR</span></div>
+                  </div>
+                  <div class="bp"><span data-role="pips-b">286.1</span></div>
+                </div>
+                <div class="ministats">
+                  <div><div class="v">79%</div><div class="k">win rate</div></div>
+                  <div><div class="v">W6</div><div class="k">streak</div></div>
+                  <div><div class="v">7.215</div><div class="k">pips tot</div></div>
+                </div>
+              </div>
+
+              <!-- bar -->
+              <div class="m-cmp">
+                <div class="bar"><span class="a" data-role="bar-a" style="width:52%"></span><span class="b" data-role="bar-b" style="width:48%"></span></div>
+              </div>
+
+              <!-- compact live feed -->
+              <div class="m-feed">
+                <div class="lh"><span>// live feed · demo</span><span class="live-dot"></span></div>
+                <div class="feed" data-role="feed"></div>
+              </div>
+            </div>
+
+            <!-- bottom nav -->
+            <nav class="bnav">
+              <div class="it"><svg viewBox="0 0 24 24"><use href="#i-chat"/></svg>Chat</div>
+              <div class="it active"><svg viewBox="0 0 24 24"><use href="#i-sfide"/></svg>Sfide</div>
+              <div class="it"><svg viewBox="0 0 24 24"><use href="#i-rank"/></svg>Class.</div>
+              <div class="it"><svg viewBox="0 0 24 24"><use href="#i-signal"/></svg>Segnali</div>
+              <div class="it"><svg viewBox="0 0 24 24"><use href="#i-user"/></svg>Profilo</div>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== FOOT ===================== -->
+  <footer class="foot">
+    <div><b>&gt; step 01 — fix applicati.</b> Bebas primario · Anton solo su VS/vittoria · sfidante in ambra (rosso = solo loss) · avatar con glitch + bordo colorato · live feed anche su mobile.</div>
+    <div class="next">
+      <div><span class="green">→</span> <b>step 02</b> — <a href="HTT-Onboarding.html" style="color:var(--terminal-green)">onboarding + boot + pannello admin ↗</a></div>
+      <div><span class="green">→</span> <b>step 03</b> — <a href="HTT-Sfide.html" style="color:var(--terminal-green)">flusso completo creazione sfida ↗</a></div>
+      <div><span class="green">→</span> step 04/05 — classifica + segnali</div>
+      <div><span class="green">→</span> stato vittoria “WINNER DETECTED” (Anton) — su richiesta</div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="htt.js?v=4"></script>
+</body>
+</html>

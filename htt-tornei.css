@@ -1,0 +1,82 @@
+/* ============================================================
+   HACK_THE_TRADING — Torneo (formato multi-trader)
+   Estende htt.css + htt-sfide.css. Self-contained (no dipendenze CSS esterne).
+   ============================================================ */
+
+/* card torneo nella hub */
+.tcard-tn { border:1px solid rgba(255,184,0,.3); border-radius:10px; background:linear-gradient(180deg,#14110a,#0d0d0d); overflow:hidden; cursor:pointer; transition:all .18s; }
+.tcard-tn:hover { border-color:var(--amber); }
+.tn-head { display:flex; align-items:center; gap:12px; padding:14px 14px 0; }
+.tn-ico { width:40px;height:40px;flex:0 0 40px;border-radius:8px;display:grid;place-items:center;color:var(--amber);
+  border:1px solid rgba(255,184,0,.4);background:rgba(255,184,0,.06); }
+.tn-ico svg { width:22px; height:22px; }
+.tn-info { flex:1; min-width:0; }
+.tn-name { font-family:var(--mono); font-size:14px; color:var(--text-primary); }
+.tn-sub { font-family:var(--mono); font-size:10.5px; color:var(--text-faint); margin-top:3px; }
+.tn-tag { font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--amber);
+  border:1px solid rgba(255,184,0,.4); background:rgba(255,184,0,.06); padding:4px 8px; border-radius:4px; display:inline-flex; align-items:center; gap:5px; }
+.tn-tag .d { width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 7px var(--amber);animation:pulse 1.3s ease-in-out infinite; }
+.tn-meta { display:flex; gap:14px; padding:10px 14px 0; font-family:var(--mono); font-size:11px; color:var(--text-dim); }
+.tn-meta .it { display:flex; align-items:center; gap:5px; } .tn-meta .it b { color:var(--text-primary); }
+.tn-meta svg { width:13px;height:13px;color:var(--text-faint); }
+.tn-foot { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 14px; }
+.tn-foot .pos { font-family:var(--mono); font-size:12px; color:var(--text-primary); }
+.tn-foot .pos b { color:var(--amber); }
+.tn-foot .ver { font-family:var(--mono); font-size:9px; color:var(--green-dim); letter-spacing:.06em; }
+
+/* schermata live torneo */
+.tlive-head { display:flex; align-items:center; justify-content:space-between; padding:6px 4px 0; }
+.tlive-asset { font-family:var(--mono); font-size:12px; color:var(--amber); border:1px solid rgba(255,184,0,.35); background:rgba(255,184,0,.05); padding:4px 10px; border-radius:5px; }
+.tlive-clock { font-family:var(--mono); font-size:13px; color:var(--text-dim); } .tlive-clock b { color:var(--text-primary); }
+.tlive-banner { text-align:center; margin-top:8px; }
+.tlive-title { font-family:var(--display); font-size:26px; letter-spacing:.03em; color:var(--text-primary); }
+.tlive-count { font-family:var(--mono); font-size:11px; color:var(--text-faint); margin-top:2px; }
+
+/* podio torneo (top 3) */
+.tn-podium { display:grid; grid-template-columns:1fr 1.12fr 1fr; gap:7px; align-items:end; margin-top:14px; }
+.tn-pod { border:1px solid var(--border); border-radius:9px; background:linear-gradient(180deg,#121212,#0d0d0d); padding:12px 6px 10px; text-align:center; position:relative; transition:all .3s; }
+.tn-pod.p1 { border-color:var(--terminal-green); box-shadow:var(--glow-green); padding-top:16px; }
+.tn-pod.p2 { border-color:rgba(229,229,229,.25); } .tn-pod.p3 { border-color:rgba(255,184,0,.3); }
+.tn-pod .rk { font-family:var(--mono); font-size:10px; color:var(--text-faint); }
+.tn-pod.p1 .rk { color:var(--terminal-green); }
+.tn-pod .av { width:40px;height:40px;border-radius:7px;margin:7px auto 0;display:grid;place-items:center;position:relative;overflow:hidden;
+  font-family:var(--mono);font-size:15px;border:1px solid var(--border-green);color:var(--terminal-green);background:var(--bg-highlight); }
+.tn-pod.p1 .av { width:46px;height:46px;box-shadow:var(--glow-green); }
+.tn-pod.p2 .av { border-color:rgba(229,229,229,.4);color:var(--text-primary);background:#161616; }
+.tn-pod.p3 .av { border-color:var(--amber);color:var(--amber);background:#18130a; }
+.tn-pod .av::after{ content:'';position:absolute;inset:0;background:repeating-linear-gradient(transparent 0 2px,rgba(0,0,0,.35) 2px 3px); }
+.tn-pod .nm { font-family:var(--mono); font-size:11px; color:var(--text-primary); margin-top:7px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tn-pod .nm.me { color:var(--terminal-green); }
+.tn-pod .pp { font-family:var(--mono); font-weight:700; font-size:16px; margin-top:4px; color:var(--text-primary); }
+.tn-pod.p1 .pp { color:var(--terminal-green); text-shadow:var(--glow-green); font-size:19px; }
+
+/* lista partecipanti */
+.tn-list { display:flex; flex-direction:column; gap:6px; margin-top:12px; }
+.tn-row { display:flex; align-items:center; gap:10px; border:1px solid var(--border); border-radius:8px; padding:9px 11px; background:var(--bg-secondary); transition:all .3s; }
+.tn-row.me { border-color:var(--terminal-green); background:var(--bg-highlight); box-shadow:inset 0 0 0 1px rgba(0,255,65,.25); }
+.tn-row .pos { font-family:var(--mono); font-size:12.5px; color:var(--text-dim); width:30px; flex:0 0 30px; }
+.tn-row.me .pos { color:var(--terminal-green); }
+.tn-row .ra { width:30px;height:30px;flex:0 0 30px;border-radius:6px;display:grid;place-items:center;position:relative;overflow:hidden;
+  font-family:var(--mono);font-size:13px;border:1px solid var(--border-green);color:var(--terminal-green);background:var(--bg-highlight); }
+.tn-row .ra::after{ content:'';position:absolute;inset:0;background:repeating-linear-gradient(transparent 0 2px,rgba(0,0,0,.35) 2px 3px); }
+.tn-row .rn { flex:1; min-width:0; font-family:var(--mono); font-size:13px; color:var(--text-primary); display:flex; align-items:center; gap:7px; }
+.tn-row .rn .you { font-size:9px; color:var(--terminal-green); border:1px solid var(--border-green); padding:1px 5px; border-radius:3px; }
+.tn-row .rp { font-family:var(--mono); font-weight:700; font-size:14px; color:var(--text-primary); }
+.tn-row.me .rp { color:var(--terminal-green); }
+.tn-row .delta { font-family:var(--mono); font-size:10px; width:34px; text-align:right; flex:0 0 34px; }
+.tn-row .delta.up { color:var(--terminal-green); } .tn-row .delta.dn { color:var(--red); }
+
+/* dimensione torneo (wizard) */
+.size-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+.size-card { border:1px solid var(--border); border-radius:9px; padding:18px 8px; text-align:center; cursor:pointer; transition:all .15s; background:var(--bg-secondary); }
+.size-card:hover { border-color:var(--border-green); }
+.size-card.sel { border-color:var(--terminal-green); background:var(--bg-highlight); box-shadow:var(--glow-green); }
+.size-card .n { font-family:var(--mono); font-weight:700; font-size:26px; color:var(--text-primary); }
+.size-card.sel .n { color:var(--terminal-green); }
+.size-card .l { font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint); margin-top:4px; }
+
+/* risultato torneo */
+.tn-res-rank { font-family:var(--display-alt); font-size:54px; line-height:1; color:var(--terminal-green); text-shadow:0 0 26px rgba(0,255,65,.5); }
+.tn-res-rank.mid { color:var(--amber); text-shadow:0 0 22px rgba(255,184,0,.4); }
+.tn-res-rank.low { color:var(--text-primary); text-shadow:none; }
+.tn-res-of { font-family:var(--mono); font-size:13px; color:var(--text-dim); margin-top:6px; }

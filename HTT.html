@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HACK_THE_TRADING — Piattaforma</title>
+<link rel="stylesheet" href="htt.css?v=5">
+<link rel="stylesheet" href="htt-onboarding.css?v=3">
+<link rel="stylesheet" href="htt-sfide.css">
+<link rel="stylesheet" href="htt-platform2.css">
+<link rel="stylesheet" href="htt-chat.css">
+<link rel="stylesheet" href="htt-tornei.css">
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<div class="fx-vignette"></div>
+<div class="fx-scanlines"></div>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- global matrix backdrop -->
+<script>
+(function () {
+  var c = document.getElementById('matrix');
+  if (!c) return;
+  var ctx = c.getContext('2d'), fs = 15, drops = [], cols = 0, W, H;
+  var glyphs = 'アカサタナ0123456789ABCDEF<>{}[]/$#*+=HTT'.split('');
+  function size(){ W=c.width=innerWidth; H=c.height=innerHeight; cols=Math.floor(W/fs); drops=[]; for(var i=0;i<cols;i++)drops[i]=Math.random()*-40; }
+  size(); addEventListener('resize', size);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  (function loop(){
+    ctx.fillStyle='rgba(13,13,13,0.16)'; ctx.fillRect(0,0,W,H);
+    ctx.font=fs+'px JetBrains Mono, monospace';
+    for(var i=0;i<cols;i++){ var ch=glyphs[(Math.random()*glyphs.length)|0];
+      ctx.fillStyle=Math.random()>0.97?'#aaffcc':'#00FF41';
+      ctx.fillText(ch,i*fs,drops[i]*fs);
+      if(drops[i]*fs>H&&Math.random()>0.975)drops[i]=0; drops[i]+=0.5+Math.random()*0.5; }
+    setTimeout(function(){ requestAnimationFrame(loop); }, 55);
+  })();
+})();
+</script>
+
+<!-- atomi + dati -->
+<script type="text/babel" src="onboarding-core.jsx"></script>
+<script type="text/babel" src="platform-data.jsx"></script>
+<script type="text/babel" src="sfide-data.jsx"></script>
+<script type="text/babel" src="chat-data.jsx"></script>
+<!-- moduli (componenti schermo) -->
+<script type="text/babel" src="sfide-hub.jsx"></script>
+<script type="text/babel" src="sfide-wizard.jsx"></script>
+<script type="text/babel" src="sfide-live.jsx"></script>
+<script type="text/babel" src="classifica.jsx"></script>
+<script type="text/babel" src="segnali.jsx"></script>
+<script type="text/babel" src="profile.jsx"></script>
+<script type="text/babel" src="chat-screen.jsx"></script>
+<script type="text/babel" src="tornei.jsx"></script>
+<!-- router unificato (definisce BottomNav globale + mount) -->
+<script type="text/babel" src="htt-app.jsx"></script>
+</body>
+</html>

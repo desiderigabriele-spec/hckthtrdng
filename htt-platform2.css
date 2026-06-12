@@ -1,0 +1,175 @@
+/* ============================================================
+   HACK_THE_TRADING — STEP 04/05 · Classifica + Segnali
+   Estende htt.css + htt-onboarding.css
+   ============================================================ */
+
+/* ---------- common screen header ---------- */
+.pg-top { display:flex; align-items:center; justify-content:space-between; }
+.pg-title { font-family: var(--display); font-size: 32px; letter-spacing:.03em; color: var(--text-primary); }
+
+/* segmented control (terminale) */
+.segctl { display:flex; gap:4px; background:#0b0b0b; border:1px solid var(--border); border-radius:8px; padding:4px; }
+.segctl button { flex:1; font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; padding:9px 6px;
+  border-radius:5px; border:0; background:transparent; color:var(--text-dim); cursor:pointer; transition:all .15s; white-space:nowrap; }
+.segctl button.on { background: var(--bg-highlight); color: var(--terminal-green); box-shadow: inset 0 0 0 1px var(--border-green); }
+
+/* ===========================  CLASSIFICA  =========================== */
+.podium { display:grid; grid-template-columns:1fr 1.15fr 1fr; gap:8px; align-items:end; margin-top:18px; }
+.pod { border:1px solid var(--border); border-radius:10px; background:linear-gradient(180deg,#121212,#0d0d0d); padding:14px 8px 12px; text-align:center; position:relative; cursor:pointer; transition:all .18s; }
+.pod:hover { border-color: var(--border-green); }
+.pod .rk { font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--text-faint); }
+.pod.p1 { border-color:var(--terminal-green); box-shadow:var(--glow-green), inset 0 0 30px rgba(0,255,65,.06); padding-top:20px; }
+.pod.p1 .rk { color:var(--terminal-green); text-shadow:var(--glow-green); }
+.pod.p2 { border-color:rgba(229,229,229,.25); }
+.pod.p3 { border-color:rgba(255,184,0,.3); }
+.pod .pav { width:46px;height:46px;border-radius:8px;margin:8px auto 0;display:grid;place-items:center;position:relative;overflow:hidden;
+  font-family:var(--mono);font-size:18px;border:1px solid var(--border-green);color:var(--terminal-green);background:var(--bg-highlight); }
+.pod.p1 .pav { width:54px;height:54px; box-shadow:var(--glow-green); }
+.pod.p2 .pav { border-color:rgba(229,229,229,.4); color:var(--text-primary); background:#161616; }
+.pod.p3 .pav { border-color:var(--amber); color:var(--amber); background:#18130a; }
+.pod .pav::after{ content:''; position:absolute; inset:0; background:repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,.35) 2px 3px); }
+.pod .pname { font-family:var(--mono); font-size:12px; color:var(--text-primary); margin-top:9px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pod .ppips { font-family:var(--mono); font-weight:700; font-size:18px; margin-top:5px; color:var(--text-primary); }
+.pod.p1 .ppips { color:var(--terminal-green); text-shadow:var(--glow-green); font-size:21px; }
+.pod .pwr { font-family:var(--mono); font-size:10px; color:var(--text-faint); margin-top:3px; }
+.pod .crown { font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:var(--terminal-green); border:1px solid var(--border-green);
+  background:rgba(0,255,65,.06); padding:2px 7px; border-radius:4px; position:absolute; top:-10px; left:50%; transform:translateX(-50%); box-shadow:var(--glow-green); white-space:nowrap; }
+
+.lb-list { display:flex; flex-direction:column; gap:7px; margin-top:14px; }
+.lb-row { display:flex; align-items:center; gap:11px; border:1px solid var(--border); border-radius:9px; padding:10px 12px; background:var(--bg-secondary); cursor:pointer; transition:all .15s; }
+.lb-row:hover { border-color: var(--border-green); }
+.lb-row.me { border-color:var(--terminal-green); box-shadow:inset 0 0 0 1px rgba(0,255,65,.25), 0 0 14px rgba(0,255,65,.18); background:var(--bg-highlight); }
+.lb-pos { font-family:var(--mono); font-size:13px; color:var(--text-dim); width:34px; flex:0 0 34px; }
+.lb-row.me .lb-pos { color:var(--terminal-green); }
+.lb-av { width:34px;height:34px;flex:0 0 34px;border-radius:6px;display:grid;place-items:center;position:relative;overflow:hidden;
+  font-family:var(--mono);font-size:14px;border:1px solid var(--border-green);color:var(--terminal-green);background:var(--bg-highlight); }
+.lb-av::after{ content:''; position:absolute; inset:0; background:repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,.35) 2px 3px); }
+.lb-info { flex:1; min-width:0; }
+.lb-name { font-family:var(--mono); font-size:13px; color:var(--text-primary); display:flex; align-items:center; gap:7px; }
+.lb-name .you { font-size:9px; color:var(--terminal-green); border:1px solid var(--border-green); padding:1px 5px; border-radius:3px; }
+.lb-sub { font-family:var(--mono); font-size:10px; color:var(--text-faint); margin-top:3px; display:flex; gap:8px; flex-wrap:wrap; }
+.lb-metric { text-align:right; }
+.lb-metric .mv { font-family:var(--mono); font-weight:700; font-size:15px; color:var(--text-primary); }
+.lb-row.me .lb-metric .mv { color:var(--terminal-green); }
+.lb-metric .mk { font-family:var(--mono); font-size:9px; color:var(--text-faint); letter-spacing:.08em; text-transform:uppercase; }
+.lb-move { font-family:var(--mono); font-size:11px; width:38px; flex:0 0 38px; text-align:right; }
+.lb-move.up { color:var(--terminal-green); } .lb-move.dn { color:var(--red); } .lb-move.eq { color:var(--text-faint); }
+
+.lb-badges { display:flex; gap:4px; }
+.bdg { font-family:var(--mono); font-size:8.5px; letter-spacing:.06em; padding:2px 5px; border-radius:3px; border:1px solid var(--border); color:var(--text-dim); white-space:nowrap; }
+.bdg.top { color:var(--amber); border-color:rgba(255,184,0,.4); background:rgba(255,184,0,.05); }
+.bdg.rise { color:var(--terminal-green); border-color:var(--border-green); background:rgba(0,255,65,.05); }
+.bdg.streak { color:#ff7ab0; border-color:rgba(255,122,176,.4); }
+.bdg.sharp { color:#7ab8ff; border-color:rgba(122,184,255,.4); }
+.bdg.ver { color:var(--green-dim); border-color:var(--border-green); }
+
+/* sticky user row */
+.lb-sticky { position:sticky; bottom:0; z-index:6; margin:8px -4px 0; padding-top:8px;
+  background:linear-gradient(180deg, rgba(13,13,13,0), rgba(13,13,13,.9) 30%); }
+.lb-sticky .lb-row { margin:0 4px; }
+
+/* ===========================  SEGNALI  =========================== */
+.sig-newbtn { width:100%; margin-top:14px; font-family:var(--mono); font-size:14px; letter-spacing:.1em; text-transform:uppercase;
+  padding:14px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
+  background:rgba(0,255,65,0.08); border:1px solid var(--terminal-green); color:var(--terminal-green); box-shadow:var(--glow-green); transition:all .18s; }
+.sig-newbtn:hover { background:rgba(0,255,65,0.16); }
+
+.sig-filters { display:flex; gap:6px; margin-top:14px; overflow-x:auto; padding-bottom:2px; }
+.fchip { font-family:var(--mono); font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; padding:7px 11px; border-radius:6px;
+  border:1px solid var(--border); background:#0b0b0b; color:var(--text-dim); cursor:pointer; white-space:nowrap; transition:all .15s; }
+.fchip.on { color:var(--terminal-green); border-color:var(--border-green); background:var(--bg-highlight); }
+
+.sig-list { display:flex; flex-direction:column; gap:12px; margin-top:14px; }
+.sigcard { border:1px solid var(--border); border-radius:11px; background:linear-gradient(180deg,#121212,#0d0d0d); overflow:hidden; cursor:pointer; transition:all .18s; }
+.sigcard:hover { border-color:var(--border-green); }
+.sigcard.toptrader { border-color:rgba(0,255,65,.32); box-shadow:0 0 16px rgba(0,255,65,.1); }
+.sig-h { display:flex; align-items:center; gap:10px; padding:12px 13px; border-bottom:1px solid var(--border); }
+.sig-av { width:32px;height:32px;flex:0 0 32px;border-radius:6px;display:grid;place-items:center;position:relative;overflow:hidden;
+  font-family:var(--mono);font-size:13px;border:1px solid var(--border-green);color:var(--terminal-green);background:var(--bg-highlight); }
+.sig-av::after{ content:''; position:absolute; inset:0; background:repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,.35) 2px 3px); }
+.sig-author { flex:1; min-width:0; }
+.sig-author .an { font-family:var(--mono); font-size:12.5px; color:var(--text-primary); }
+.sig-author .ar { font-family:var(--mono); font-size:10px; color:var(--amber); margin-top:2px; }
+.sig-time { font-family:var(--mono); font-size:10px; color:var(--text-faint); }
+.sig-status { font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; padding:4px 8px; border-radius:4px; white-space:nowrap; }
+.sig-status.open { color:var(--amber); border:1px solid rgba(255,184,0,.4); background:rgba(255,184,0,.06); }
+.sig-status.win { color:var(--terminal-green); border:1px solid var(--border-green); background:rgba(0,255,65,.06); }
+.sig-status.loss { color:var(--red); border:1px solid rgba(255,0,51,.4); background:rgba(255,0,51,.06); }
+.sig-status.cancelled { color:var(--text-faint); border:1px solid var(--border); }
+
+.sig-body { padding:12px 14px; font-family:var(--mono); font-size:12.5px; }
+.sig-row1 { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.sig-asset { font-size:16px; color:var(--text-primary); letter-spacing:.02em; }
+.sig-dir { font-family:var(--mono); font-size:11px; letter-spacing:.08em; padding:4px 10px; border-radius:4px; display:inline-flex; align-items:center; gap:5px; }
+.sig-dir.buy { color:var(--terminal-green); background:rgba(0,255,65,.08); border:1px solid var(--border-green); }
+.sig-dir.sell { color:var(--red); background:rgba(255,0,51,.08); border:1px solid rgba(255,0,51,.4); }
+.sig-grid { display:grid; grid-template-columns:auto 1fr; gap:6px 14px; color:var(--text-dim); }
+.sig-grid .k { color:var(--text-faint); }
+.sig-grid .v { color:var(--text-primary); text-align:right; }
+.sig-tps { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; justify-content:flex-end; }
+.tp { font-size:11px; padding:2px 7px; border-radius:4px; border:1px solid var(--border-green); color:var(--terminal-green); background:rgba(0,255,65,.05); }
+.tp.open { color:var(--text-faint); border-color:var(--border); background:none; }
+.sl-chip { font-size:11px; padding:2px 7px; border-radius:4px; border:1px solid rgba(255,0,51,.4); color:var(--red); background:rgba(255,0,51,.05); }
+.sig-foot { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-top:1px solid var(--border); font-family:var(--mono); font-size:11px; }
+.sig-foot .res.win { color:var(--terminal-green); } .sig-foot .res.loss { color:var(--red); }
+.sig-foot .ver { color:var(--green-dim); font-size:9px; letter-spacing:.06em; }
+
+.disclaimer { text-align:center; font-family:var(--mono); font-size:10px; color:var(--text-faint); margin-top:18px; padding:12px 8px 4px; border-top:1px dashed var(--border); line-height:1.6; }
+
+.empty-sig { text-align:center; padding:34px 18px; font-family:var(--mono); font-size:12.5px; color:var(--text-dim); }
+.empty-sig .g { font-size:34px; color:var(--text-faint); opacity:.6; }
+
+/* ---------- CREATE SIGNAL form ---------- */
+.cs-h { display:flex; align-items:center; gap:10px; padding:14px 20px 0; }
+.cs-back { font-family:var(--mono); font-size:18px; color:var(--text-dim); cursor:pointer; background:none; border:0; }
+.cs-back:hover { color:var(--terminal-green); }
+.cs-title { font-family:var(--display); font-size:24px; letter-spacing:.03em; color:var(--text-primary); }
+.cs-label { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--green-dim); margin:16px 0 8px; }
+.cs-assets { display:flex; gap:6px; flex-wrap:wrap; }
+.cs-pill { font-family:var(--mono); font-size:11px; padding:8px 12px; border-radius:6px; border:1px solid var(--border); background:#0b0b0b; color:var(--text-dim); cursor:pointer; transition:all .15s; }
+.cs-pill.on { color:var(--terminal-green); border-color:var(--border-green); background:var(--bg-highlight); }
+.cs-dir { display:flex; gap:8px; }
+.cs-dir button { flex:1; font-family:var(--mono); font-size:13px; letter-spacing:.08em; padding:13px; border-radius:7px; cursor:pointer; border:1px solid var(--border); background:#0b0b0b; color:var(--text-dim); transition:all .15s; }
+.cs-dir button.buy.on { color:var(--terminal-green); border-color:var(--terminal-green); background:rgba(0,255,65,.08); box-shadow:var(--glow-green); }
+.cs-dir button.sell.on { color:var(--red); border-color:var(--red); background:rgba(255,0,51,.08); }
+.cs-inputs { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.cs-field { }
+.cs-field label { font-family:var(--mono); font-size:10px; color:var(--text-faint); letter-spacing:.06em; text-transform:uppercase; display:block; margin-bottom:5px; }
+.cs-field input { width:100%; background:#0b0b0b; border:1px solid var(--border); color:var(--text-primary); font-family:var(--mono); font-size:13px; padding:10px 11px; border-radius:6px; }
+.cs-field input:focus { outline:none; border-color:var(--terminal-green); box-shadow:0 0 0 3px rgba(0,255,65,.1); }
+.cs-warn { font-family:var(--mono); font-size:11px; color:var(--amber); margin-top:10px; display:flex; gap:7px; align-items:flex-start; line-height:1.5; }
+.cs-preview-lbl { font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-faint); margin:18px 0 8px; display:flex; align-items:center; gap:8px; }
+.cs-preview-lbl::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent); }
+
+/* signal transmit overlay */
+.sig-launch { position:absolute; inset:0; z-index:40; background:#060606; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:24px; }
+.sig-launch .g { font-family:var(--mono); font-size:46px; color:var(--terminal-green); text-shadow:var(--glow-green); margin-bottom:8px; }
+.sig-launch .lines { font-family:var(--mono); font-size:14px; line-height:2; color:var(--text-dim); width:100%; }
+.sig-launch .lines b { color:var(--terminal-green); }
+
+/* ---------- TRADER PROFILE overlay ---------- */
+.prof-overlay { position:absolute; inset:0; z-index:50; background:rgba(6,6,6,.86); backdrop-filter:blur(3px); display:flex; flex-direction:column; }
+.prof-card { margin:auto 14px; background:linear-gradient(180deg,#141414,#0d0d0d); border:1px solid var(--border-green);
+  border-radius:14px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 0 40px rgba(0,255,65,.04); max-height:88%; display:flex; flex-direction:column; }
+.prof-x { position:absolute; top:14px; right:18px; font-family:var(--mono); font-size:20px; color:var(--text-dim); cursor:pointer; z-index:2; background:none; border:0; }
+.prof-x:hover { color:var(--terminal-green); }
+.prof-top { padding:22px 20px 16px; text-align:center; border-bottom:1px solid var(--border); position:relative; }
+.prof-av { width:64px;height:64px;border-radius:11px;margin:0 auto;display:grid;place-items:center;position:relative;overflow:hidden;
+  font-family:var(--mono);font-size:26px;border:1px solid var(--terminal-green);color:var(--terminal-green);background:var(--bg-highlight);box-shadow:var(--glow-green); }
+.prof-av::after{ content:''; position:absolute; inset:0; background:repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,.35) 2px 3px); }
+.prof-name { font-family:var(--display); font-size:26px; letter-spacing:.03em; color:var(--text-primary); margin-top:12px; }
+.prof-rank { font-family:var(--mono); font-size:12px; color:var(--amber); margin-top:4px; }
+.prof-badges { display:flex; gap:5px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+.prof-stats { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border); }
+.prof-stat { background:var(--bg-primary); padding:14px 16px; }
+.prof-stat .v { font-family:var(--mono); font-weight:700; font-size:20px; color:var(--text-primary); }
+.prof-stat .v.g { color:var(--terminal-green); }
+.prof-stat .k { font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint); margin-top:4px; }
+.prof-actions { padding:16px; display:flex; gap:10px; }
+.prof-sfida { flex:1; font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase; padding:14px; border-radius:8px; cursor:pointer; text-align:center; text-decoration:none;
+  background:rgba(0,255,65,.08); border:1px solid var(--terminal-green); color:var(--terminal-green); box-shadow:var(--glow-green); display:flex; align-items:center; justify-content:center; gap:8px; }
+.prof-sfida:hover { background:rgba(0,255,65,.16); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lb-row, .sigcard { animation:none !important; }
+}
