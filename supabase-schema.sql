@@ -12,7 +12,7 @@ create table if not exists public.users (
 );
 
 create table if not exists public.rooms (
-  id uuid default gen_random_uuid() primary key,
+  id text primary key,
   nome text not null,
   tipo text default 'chat',
   created_at timestamp with time zone default now()
@@ -25,7 +25,7 @@ on conflict do nothing;
 create table if not exists public.messages (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.users(id) on delete cascade,
-  room_id text default 'main-room',
+  room_id text default 'main-room' references public.rooms(id),
   content text not null,
   moderazione_status text default 'ok',
   moderazione_reason text,
