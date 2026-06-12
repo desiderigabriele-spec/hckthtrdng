@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HACK_THE_TRADING — Live Streaming</title>
+<link rel="stylesheet" href="htt.css?v=5">
+<link rel="stylesheet" href="htt-live.css?v=1">
+</head>
+<body class="mode-public">
+
+<canvas id="mrain" data-market-rain data-fs="16"></canvas>
+<div class="fx-vignette"></div>
+<div class="fx-scanlines"></div>
+
+<div class="lv-page" data-screen-label="Live Streaming">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="lv-header">
+    <div class="lv-logo" title="HTT — decode the market">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="htt">HTT</span>
+      <span class="candles">
+        <i class="up" style="height: 9px;"></i>
+        <i class="dn" style="height: 13px;"></i>
+        <i class="up" style="height: 16px;"></i>
+        <i class="up" style="height: 11px;"></i>
+      </span>
+      <span class="htt cursor"></span>
+    </div>
+    <div>
+      <div class="lv-brand">H<span class="v">A</span>CK<span class="sep">_</span>TH<span class="v">E</span><span class="sep">_</span>TR<span class="v">A</span>D<span class="v">I</span>NG</div>
+      <div class="lv-crumb"><b>//</b> LIVE STREAMING</div>
+    </div>
+    <span class="sp"></span>
+    <span class="lv-mode-lab">simula accesso</span>
+    <div class="lv-mode" role="tablist" aria-label="Livello di accesso">
+      <button type="button" data-mode="public">Pubblico</button>
+      <button type="button" data-mode="affiliate">Affiliato</button>
+    </div>
+  </header>
+
+  <!-- ===================== GATING (Modulo B) ===================== -->
+  <div class="lv-gate">
+    <span class="lvl" id="gate-lvl">LIVELLO: PUBBLICO</span>
+    <span class="desc" id="gate-desc">vedi profili, classifiche e operazioni CHIUSE (in ritardo). Le live in tempo reale sono per gli affiliati.</span>
+    <span class="sp"></span>
+    <button type="button" class="cta-aff" id="gate-cta">Affiliati → vedi le live in tempo reale</button>
+  </div>
+
+  <!-- ===================== STRIP LIVE ===================== -->
+  <div class="lv-strip">
+    <div class="t-row">
+      <span class="pill rec"><span class="ld"></span>LIVE</span>
+      <h1 class="lv-title">NEØN_WOLF <span class="vs">VS</span> V0ID_RUNNER</h1>
+    </div>
+    <span class="sp"></span>
+    <div class="meta">
+      <span class="pill ver">✓ VERIFICATO AVATRADE</span>
+      <span class="mono">XAU/USD · 1V1 · 48H</span>
+      <span class="mono dim">👁 <b class="green" id="viewers">1.284</b> spettatori</span>
+    </div>
+  </div>
+
+  <!-- ===================== GRIGLIA LIVE (Modulo A) ===================== -->
+  <div class="lv-grid">
+
+    <!-- VIDEO TRADER (sx) -->
+    <aside class="lv-video">
+      <div class="panel lock-wrap">
+        <div class="lock-blur">
+          <div class="cam">
+            <span class="pill rec tag-live"><span class="ld"></span>CAM</span>
+            <div class="ph"><b>[ webcam trader ]</b><br>video placeholder · 1:1</div>
+            <div class="fx-cam"></div>
+            <div class="fly-zone" id="flyzone"></div>
+          </div>
+          <div class="cam-meta">
+            <span class="av">NW</span>
+            <span>
+              <span class="nm">NEØN_WOLF</span>
+              <span class="rk" style="display: block;"><b>#03 GLOBALE</b> · TOP 10 · scalper</span>
+            </span>
+          </div>
+          <div class="cam-actions">
+            <button type="button" class="btn">+ Segui</button>
+            <button type="button" class="btn" id="supp-btn">💚 Supporta</button>
+          </div>
+        </div>
+        <div class="lock-overlay">
+          <span class="lk">🔒</span>
+        </div>
+      </div>
+      <div class="panel" style="margin-top: 14px;">
+        <div class="cam-mini">
+          <span class="sq">[ cam ]</span>
+          <span>
+            <span class="nm" style="display: block;">V0ID_RUNNER</span>
+            <span class="rk">#07 GLOBALE · swing</span>
+          </span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- SCHERMO PRINCIPALE (centro) -->
+    <section class="lv-stage">
+      <div class="panel lock-wrap">
+        <div class="panel-head">
+          <span>// SFIDA_LIVE — punteggio</span>
+          <span class="tag">feed sola lettura · dati verificati</span>
+        </div>
+
+        <div class="lock-blur">
+          <div class="score">
+            <div class="side-a">
+              <div class="who">NEØN_WOLF <span class="flag" id="flag-a">IN TESTA</span></div>
+              <div class="pips"><span id="pips-a">312.4</span> <span class="unit">PIPS</span></div>
+            </div>
+            <div class="mid">
+              <div class="clock" id="clock">14:23:41</div>
+              <div class="clock-lab">tempo rimasto</div>
+            </div>
+            <div class="side-b">
+              <div class="who"><span class="flag" id="flag-b">IN TESTA</span> V0ID_RUNNER</div>
+              <div class="pips"><span id="pips-b">286.1</span> <span class="unit">PIPS</span></div>
+            </div>
+          </div>
+          <div class="duel-bar"><div class="a" id="bar-a" style="width: 52%;"></div><div class="b"></div></div>
+          <div class="duel-pct"><span id="pct-a">NEØN_WOLF · 52%</span><span id="pct-b">48% · V0ID_RUNNER</span></div>
+
+          <!-- feed LIVE (solo affiliati) -->
+          <div class="feedbox">
+            <div class="feed-head">
+              <span class="mode-live">● FEED OPERAZIONI · TEMPO REALE</span>
+              <span>XAU/USD</span>
+            </div>
+            <div class="feed" id="feed-live"></div>
+          </div>
+        </div>
+
+        <!-- overlay lock per il pubblico -->
+        <div class="lock-overlay">
+          <span class="lk">🔒</span>
+          <div class="h">LA LIVE È RISERVATA AGLI AFFILIATI</div>
+          <p class="p">apri un conto broker reale col link HTT e sblocchi <b>tutte</b> le live in tempo reale — non solo questa. La sfida è in corso adesso: qui sotto vedi le operazioni chiuse, in ritardo.</p>
+          <button type="button" class="btn btn-primary" id="lock-cta">Apri conto col link HTT →</button>
+        </div>
+      </div>
+
+      <!-- feed PUBBLICO: operazioni chiuse, in ritardo -->
+      <div class="panel" style="margin-top: 14px;">
+        <div class="panel-head">
+          <span>// OPERAZIONI CHIUSE — vista pubblica</span>
+          <span class="tag">ritardo 15 min</span>
+        </div>
+        <div class="feedbox" style="margin-top: 14px;">
+          <div class="feed-head">
+            <span class="mode-delay">◷ FEED A RISULTATO · IN RITARDO</span>
+            <span class="mode-live">◷ così la vede il pubblico</span>
+            <span>XAU/USD</span>
+          </div>
+          <div class="feed" id="feed-public" style="min-height: 120px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAT SPETTATORI (dx) -->
+    <aside class="lv-chat">
+      <div class="panel">
+        <div class="panel-head">
+          <span>// CHAT_SPETTATORI</span>
+          <span class="tag">moderazione AI</span>
+        </div>
+        <div class="chatfeed" id="chatfeed"></div>
+        <div class="react-row">
+          <button type="button" data-emoji="🔥" aria-label="Reazione fuoco">🔥</button>
+          <button type="button" data-emoji="📈" aria-label="Reazione rialzo">📈</button>
+          <button type="button" data-emoji="⚡" aria-label="Reazione lampo">⚡</button>
+          <button type="button" data-emoji="💎" aria-label="Reazione diamante">💎</button>
+        </div>
+        <div class="chat-input">
+          <input type="text" class="field" id="chat-field" placeholder="> scrivi in chat…">
+          <button type="button" class="send" id="chat-send">INVIA</button>
+        </div>
+        <div class="chat-note">chat in sola lettura — affiliati per scrivere e reagire</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ===================== COMPLIANCE ===================== -->
+  <footer class="lv-disclaimer">
+    <b>// DISCLAIMER</b> — contenuto educativo e di intrattenimento: stai guardando una competizione, non un servizio di segnali da copiare. Il trading comporta rischi elevati di perdita del capitale. HTT non esegue operazioni e non gestisce fondi di trading: i dati provengono in sola lettura dal conto verificato del trader. I risultati passati non garantiscono risultati futuri.
+  </footer>
+</div>
+
+<script src="market-rain.js?v=1"></script>
+<script src="htt-live.js?v=1"></script>
+</body>
+</html>
