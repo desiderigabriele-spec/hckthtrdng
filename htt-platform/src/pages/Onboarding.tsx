@@ -57,22 +57,31 @@ export default function Onboarding() {
     setError('')
     setLoading(true)
     try {
-      const { data, error: authError } = await supabase.auth.signUp({ email, password })
+      const { data, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { username } },
+      })
       if (authError) throw authError
       if (data.user) {
-        const { error: profileError } = await supabase.from('users').insert({
-          id: data.user.id,
-          email,
-          username,
-          avatrade_verified: false,
-          ruolo: 'viewer',
-        })
-        if (profileError) throw profileError
+        // Il trigger handle_new_user crea gia' la riga in public.users:
+        // qui aggiorniamo lo username scelto dall'utente.
+        const { error: profileError } = await supabase
+          .from('users')
+          .update({ username })
+          .eq('id', data.user.id)
+        if (profileError && profileError.code !== '23505') throw profileError
       }
       setStep('avatrade')
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Errore registrazione'
-      setError(message)
+      if (message.includes('User already registered')) {
+        setError('email gia\' registrata. prova ad accedere.')
+      } else if (message.includes('duplicate') || message.includes('username')) {
+        setError('username gia\' in uso. scegline un altro.')
+      } else {
+        setError(message)
+      }
     } finally {
       setLoading(false)
     }
