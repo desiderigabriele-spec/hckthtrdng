@@ -38,7 +38,7 @@ export default function Area() {
   return (
     <div className="grain relative min-h-[100svh]">
       <MatrixRain className="-z-10 opacity-[0.07]" />
-      <header className="sticky top-0 z-40 border-b border-line bg-ink/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-line bg-ink/95">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <Link to="/" className="flex items-center gap-3">
             <span className="relative grid h-8 w-8 place-items-center rounded-full border border-neon/50">

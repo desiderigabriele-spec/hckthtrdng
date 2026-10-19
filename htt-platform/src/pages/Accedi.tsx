@@ -37,10 +37,10 @@ export default function Accedi() {
       </Link>
 
       <motion.div
-        initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="neon-border relative w-full max-w-md rounded-[2rem] bg-coal/80 p-8 backdrop-blur-xl sm:p-10"
+        className="neon-border relative w-full max-w-md rounded-[2rem] bg-coal/95 p-8 sm:p-10"
       >
         <TerminalBar label="login.sh — area riservata" />
         <div className="mx-auto mb-8 mt-8 grid h-14 w-14 place-items-center rounded-2xl border border-neon/40 bg-neon/10 text-neon">

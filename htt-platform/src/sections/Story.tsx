@@ -74,7 +74,7 @@ export function Method() {
         <div className="relative mx-auto grid w-full max-w-6xl items-center gap-6 px-6 lg:grid-cols-2 lg:gap-16">
           <div className="order-2 min-h-[260px] lg:order-1">
             <Eyebrow>Come funziona</Eyebrow>
-            <motion.div key={step} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6 }}>
+            <motion.div key={step} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className={`font-mono text-xs uppercase tracking-[0.3em] ${lit ? 'text-emerald' : 'text-amber'}`}>{STEPS[step].kicker}</div>
               <h2 className="mt-4 text-[clamp(1.9rem,4.2vw,3.4rem)] font-bold leading-[1.02] tracking-tightest">{STEPS[step].title}</h2>
               <p className="mt-5 max-w-md text-lg leading-relaxed text-bone/65">{STEPS[step].text}</p>
@@ -109,7 +109,7 @@ export function Method() {
                       strokeDasharray={c}
                       strokeDashoffset={on ? 0 : c}
                       transform="rotate(-90 200 200)"
-                      style={{ transition: 'stroke-dashoffset 1.1s cubic-bezier(0.16,1,0.3,1), stroke 0.6s, stroke-width 0.3s', filter: on ? 'drop-shadow(0 0 6px rgba(255,184,0,0.8))' : 'none' }}
+                      style={{ transition: 'stroke-dashoffset 1.1s cubic-bezier(0.16,1,0.3,1), stroke 0.6s, stroke-width 0.3s' }}
                     />
                     <circle cx="200" cy={200 - r} r={on ? 6 : 3} fill={on ? (lit ? '#00FF41' : '#FFB800') : '#2A2A2A'} style={{ transition: 'all 0.6s' }} />
                   </g>
@@ -131,7 +131,7 @@ export function Method() {
               </div>
             </div>
 
-            <div className="absolute -bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full border border-line bg-coal/80 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-mute backdrop-blur">
+            <div className="absolute -bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full border border-line bg-coal px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-mute">
               <Lock size={11} className="text-neon" /> {c.badge}
             </div>
           </div>

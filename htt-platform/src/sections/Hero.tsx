@@ -142,7 +142,7 @@ export function Hero() {
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
             </a>
           </Magnetic>
-          <a href="#metodo" className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-ink/40 px-7 py-4 text-base text-bone/85 backdrop-blur transition-colors hover:border-neon/40 hover:text-bone">
+          <a href="#metodo" className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-ink/60 px-7 py-4 text-base text-bone/85 transition-colors hover:border-neon/40 hover:text-bone">
             {c.cta2}
           </a>
         </motion.div>

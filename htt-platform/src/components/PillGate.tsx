@@ -36,8 +36,8 @@ function PillSpot({ mode, active, onPick, onHover }: { mode: Mode; active: boole
     >
       <motion.span
         aria-hidden="true"
-        className="pointer-events-none absolute h-[38%] w-[52%] rounded-full mix-blend-screen blur-xl"
-        style={{ background: p.color }}
+        className="pointer-events-none absolute h-[90%] w-[90%] rounded-full"
+        style={{ background: `radial-gradient(closest-side, ${p.color}, transparent)` }}
         animate={{ opacity: active ? [0.75, 1, 0.75] : [0.12, 0.3, 0.12], scale: active ? 1.5 : 1 }}
         transition={{ opacity: { duration: 2.2, repeat: Infinity }, scale: { type: 'spring', stiffness: 200, damping: 15 } }}
       />
@@ -139,7 +139,7 @@ export default function PillGate({ onChoose }: { onChoose: (m: Mode) => void }) 
               onClick={() => pick(m)}
               onPointerEnter={() => setHover(m)}
               onPointerLeave={() => setHover(null)}
-              className={`rounded-2xl border bg-coal/70 p-4 text-left backdrop-blur transition-all sm:p-5 ${hover === m ? 'scale-[1.02]' : ''}`}
+              className={`rounded-2xl border bg-coal/90 p-4 text-left transition-all sm:p-5 ${hover === m ? 'scale-[1.02]' : ''}`}
               style={{ borderColor: hover === m ? PILLS[m].color : 'rgba(255,255,255,0.08)', boxShadow: hover === m ? `0 0 40px -10px ${PILLS[m].color}` : undefined }}
             >
               <div className="font-mono text-[10px] uppercase tracking-[0.18em] sm:text-[11px]" style={{ color: PILLS[m].color }}>{PILLS[m].title}</div>

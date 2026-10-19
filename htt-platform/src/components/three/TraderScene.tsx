@@ -87,8 +87,8 @@ export default function TraderScene({ className = '' }: { className?: string }) 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const small = window.innerWidth < 768
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, small ? 1.5 : 2))
+    const renderer = new THREE.WebGLRenderer({ antialias: !small, alpha: true, powerPreference: 'high-performance' })
+    renderer.setPixelRatio(small ? 1 : Math.min(window.devicePixelRatio, 1.5))
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     host.appendChild(renderer.domElement)
 
@@ -125,9 +125,6 @@ export default function TraderScene({ className = '' }: { className?: string }) 
       const screen = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.64), new THREE.MeshBasicMaterial({ map: charts[i].texture, toneMapped: false }))
       g.add(screen)
       add(new THREE.BoxGeometry(0.06, 0.5, 0.06), dark, [0, -0.55, -0.06], [0, 0, 0], [1, 1, 1], g)
-      const light = new THREE.PointLight(0x00ff41, 2.2, 3.2, 1.6)
-      light.position.set(0, 0, 0.35)
-      g.add(light)
     })
     add(new THREE.BoxGeometry(0.62, 0.025, 0.2), dark, [0, 0.8, -0.05])
 
@@ -162,7 +159,7 @@ export default function TraderScene({ className = '' }: { className?: string }) 
     add(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 8), dark, [0, 0.46, 0.6])
 
     // Skyline notturno oltre i monitor
-    const cityCount = small ? 900 : 1800
+    const cityCount = small ? 500 : 1400
     const cityPos = new Float32Array(cityCount * 3)
     for (let i = 0; i < cityCount; i++) {
       const bx = Math.floor(Math.random() * 40)
@@ -184,6 +181,9 @@ export default function TraderScene({ className = '' }: { className?: string }) 
     const rimL = new THREE.DirectionalLight(0x00ff41, 1.6)
     rimL.position.set(-2.5, 1.6, -1.5)
     scene.add(rimL)
+    const glow = new THREE.PointLight(0x00ff41, 4, 4, 1.4)
+    glow.position.set(0, 1.35, -0.3)
+    scene.add(glow)
     const fill = new THREE.DirectionalLight(0x9ab8a8, 0.9)
     fill.position.set(1.5, 3, 4)
     scene.add(fill)
@@ -242,13 +242,16 @@ export default function TraderScene({ className = '' }: { className?: string }) 
       head.rotation.x = 0.08 + Math.sin(t * 0.5) * 0.03
       arms.forEach(({ fore }, i) => { fore.rotation.x = 1.45 + Math.sin(t * 9 + i * 1.7) * 0.02 })
 
-      if (t - lastTick > 0.18) { lastTick = t; charts.forEach((c) => c.tick()) }
+      if (t - lastTick > 0.3) { lastTick = t; charts.forEach((c) => c.tick()) }
       renderer.render(scene, camera)
     }
 
+    let frame = 0
     const loop = () => {
       raf = requestAnimationFrame(loop)
-      if (visible) render()
+      frame++
+      if (!visible || document.hidden || (small && frame % 2)) return
+      render()
     }
     if (reduced) render(); else loop()
 
