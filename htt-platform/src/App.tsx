@@ -1,102 +1,42 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import type { ReactNode } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import Layout from './components/layout/Layout'
-import Login from './pages/Login'
-import Onboarding from './pages/Onboarding'
-import Chat from './pages/Chat'
-import Sfide from './pages/Sfide'
-import SfidaLive from './pages/SfidaLive'
-import Classifica from './pages/Classifica'
-import Segnali from './pages/Segnali'
-import Profilo from './pages/Profilo'
-import Admin from './pages/Admin'
-import LoadingTerminal from './components/ui/LoadingTerminal'
+import Landing from './pages/Landing'
+import Accedi from './pages/Accedi'
+import Area from './pages/Area'
 
-function PrivateOutlet({ requireVerified = false, requireAdmin = false }: {
-  requireVerified?: boolean
-  requireAdmin?: boolean
-}) {
-  const { session, user, loading } = useAuth()
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
-        <LoadingTerminal lines={['> autenticazione in corso...', '> verifica sessione...']} />
-      </div>
-    )
-  }
-
-  if (!session) return <Navigate to="/login" replace />
-
-  if (requireAdmin && user?.ruolo !== 'admin') {
-    return <Navigate to="/chat" replace />
-  }
-
-  if (requireVerified && user && !user.avatrade_verified) {
-    return (
-      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center p-4">
-        <div className="text-center max-w-sm">
-          <div className="font-mono text-[#FFB800] space-y-2 mb-6">
-            <p>{`> account in fase di verifica`}</p>
-            <p className="text-xs text-gray-500">{`> attendi la verifica del team HTT`}</p>
-          </div>
-          <div className="flex justify-center gap-1">
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                className="w-2 h-2 rounded-full bg-[#FFB800] animate-pulse"
-                style={{ animationDelay: `${i * 0.3}s` }}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  return <Outlet />
+function Splash() {
+  return (
+    <div className="grid min-h-[100svh] place-items-center">
+      <span className="h-8 w-8 animate-spin rounded-full border-2 border-neon/20 border-t-neon" />
+    </div>
+  )
 }
 
-function AuthedRedirect({ children }: { children: React.ReactNode }) {
-  const { session } = useAuth()
-  if (session) return <Navigate to="/chat" replace />
+function Protected({ children }: { children: ReactNode }) {
+  const { session, loading } = useAuth()
+  if (loading) return <Splash />
+  if (!session) return <Navigate to="/accedi" replace />
   return <>{children}</>
 }
 
-function AppRoutes() {
-  return (
-    <Routes>
-      {/* Auth routes (no layout) */}
-      <Route path="/login" element={<AuthedRedirect><Login /></AuthedRedirect>} />
-      <Route path="/registrazione" element={<AuthedRedirect><Onboarding /></AuthedRedirect>} />
-
-      {/* Routes with Layout — all public */}
-      <Route element={<Layout />}>
-        <Route path="/classifica" element={<Classifica />} />
-        <Route path="/segnali" element={<Segnali />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/sfide" element={<Sfide />} />
-        <Route path="/sfide/:id" element={<SfidaLive />} />
-        <Route path="/profilo" element={<Profilo />} />
-
-        {/* Admin pages — still protected */}
-        <Route element={<PrivateOutlet requireAdmin />}>
-          <Route path="/admin" element={<Admin />} />
-        </Route>
-      </Route>
-
-      {/* Default redirect */}
-      <Route path="/" element={<Navigate to="/chat" replace />} />
-      <Route path="*" element={<Navigate to="/chat" replace />} />
-    </Routes>
-  )
+function GuestOnly({ children }: { children: ReactNode }) {
+  const { session, loading } = useAuth()
+  if (loading) return <Splash />
+  if (session) return <Navigate to="/area" replace />
+  return <>{children}</>
 }
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRoutes />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/accedi" element={<GuestOnly><Accedi /></GuestOnly>} />
+          <Route path="/area" element={<Protected><Area /></Protected>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </AuthProvider>
     </BrowserRouter>
   )
