@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import MatrixRain from './MatrixRain'
 import type { Mode } from '../content/copy'
@@ -50,6 +50,32 @@ export default function PillGate({ onChoose }: { onChoose: (m: Mode) => void }) 
   const [hover, setHover] = useState<Mode | null>(null)
   const [chosen, setChosen] = useState<Mode | null>(null)
   const [typed, setTyped] = useState(0)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Safari mobile avvia l'autoplay solo se "muted" e "playsinline" sono attributi reali del tag
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    v.muted = true
+    v.defaultMuted = true
+    v.setAttribute('muted', '')
+    v.setAttribute('playsinline', '')
+    v.setAttribute('webkit-playsinline', '')
+    const play = () => { if (v.paused) v.play().catch(() => {}) }
+    play()
+    v.addEventListener('loadeddata', play)
+    v.addEventListener('canplay', play)
+    document.addEventListener('visibilitychange', play)
+    window.addEventListener('touchstart', play, { passive: true })
+    window.addEventListener('pointerdown', play)
+    return () => {
+      v.removeEventListener('loadeddata', play)
+      v.removeEventListener('canplay', play)
+      document.removeEventListener('visibilitychange', play)
+      window.removeEventListener('touchstart', play)
+      window.removeEventListener('pointerdown', play)
+    }
+  }, [])
 
   useEffect(() => {
     if (typed >= LINES.length) return
@@ -78,13 +104,9 @@ export default function PillGate({ onChoose }: { onChoose: (m: Mode) => void }) 
         ))}
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.4 }}
-        className="relative aspect-[3/5] w-full max-w-[calc(100svh*0.6)]"
-      >
+      <div className="relative aspect-[3/5] w-full max-w-[calc(100svh*0.6)]">
         <video
+          ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           poster="/gate/pillole.jpg"
           autoPlay
@@ -94,14 +116,15 @@ export default function PillGate({ onChoose }: { onChoose: (m: Mode) => void }) 
           preload="auto"
           aria-hidden="true"
         >
-          <source src="/gate/pillole.webm" type="video/webm" />
           <source src="/gate/pillole.mp4" type="video/mp4" />
+          <source src="/gate/pillole.webm" type="video/webm" />
         </video>
+        <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-black" initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ duration: 1.4 }} />
         <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 -left-px w-[6%] bg-gradient-to-r from-black to-transparent" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 -right-px w-[6%] bg-gradient-to-l from-black to-transparent" />
         <PillSpot mode="neofita" active={hover === 'neofita'} onPick={() => pick('neofita')} onHover={(h) => setHover(h ? 'neofita' : null)} />
         <PillSpot mode="esperto" active={hover === 'esperto'} onPick={() => pick('esperto')} onHover={(h) => setHover(h ? 'esperto' : null)} />
-      </motion.div>
+      </div>
 
       <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center bg-gradient-to-t from-black via-black/90 to-transparent px-4 pb-6 pt-24">
         <div className="flex w-full max-w-3xl flex-col items-center">
