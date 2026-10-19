@@ -2,41 +2,37 @@ import { useRef, useState } from 'react'
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion'
 import { Clock, Lock, Repeat, Shuffle, Zap } from 'lucide-react'
 import { Eyebrow, FadeUp, RevealWords } from '../components/fx'
+import { useCopy } from '../context/ModeContext'
 
-const PAINS = [
-  { icon: Zap, title: 'Entri troppo presto', text: 'Vedi un movimento, temi di perderlo, clicchi. E il mercato gira subito dopo.' },
-  { icon: Shuffle, title: 'Cambi strategia ogni settimana', text: 'Ogni video promette quella giusta. Nessuna dura abbastanza da poter funzionare.' },
-  { icon: Clock, title: 'Vivi incollato al grafico', text: 'Scalping da pochi minuti, notifiche, ansia. Il trading diventa una dipendenza, non un\'attività.' },
-  { icon: Repeat, title: 'Rischi a sensazione', text: 'Una size diversa ogni volta. Basta una giornata storta per cancellare un mese di lavoro.' },
-]
+const ICONS = [Shuffle, Zap, Repeat, Clock]
 
 export function Problem() {
+  const c = useCopy().problem
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-28 sm:py-40">
       <div className="grid gap-16 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
         <div className="lg:sticky lg:top-32 lg:self-start">
-          <Eyebrow>Il vero problema</Eyebrow>
-          <h2 className="text-[clamp(2.2rem,5vw,4rem)] font-bold leading-[1] tracking-tightest">
-            <RevealWords text="Non ti manca una strategia." />
-            <span className="font-serif font-normal tracking-normal text-neon-light">
-              <RevealWords text="Ti manca un filtro." delay={0.3} />
+          <Eyebrow>{c.eyebrow}</Eyebrow>
+          <h2 key={c.titleA} className="text-[clamp(2.2rem,5vw,4rem)] leading-[1] tracking-tightest">
+            <RevealWords text={c.titleA} />
+            <span className="text-neon-light">
+              <RevealWords text={c.titleB} delay={0.3} />
             </span>
           </h2>
           <FadeUp delay={0.2}>
-            <p className="mt-8 max-w-md text-lg leading-relaxed text-bone/65">
-              La maggior parte dei trader non perde per mancanza di informazioni.
-              Perde perché <span className="text-bone">entra quando dovrebbe aspettare</span>.
-            </p>
+            <p className="mt-8 max-w-md text-lg leading-relaxed text-bone/65">{c.intro}</p>
           </FadeUp>
         </div>
 
         <div className="space-y-4">
-          {PAINS.map((p, i) => (
+          {c.pains.map((p, i) => {
+            const Icon = ICONS[i % ICONS.length]
+            return (
             <FadeUp key={p.title} delay={i * 0.08}>
               <div className="group relative flex gap-5 overflow-hidden rounded-3xl border border-line bg-coal/60 p-6 transition-colors duration-500 hover:border-alarm/30 sm:p-8">
                 <div className="absolute inset-0 bg-gradient-to-r from-alarm/[0.07] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 <div className="relative grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-line bg-smoke text-alarm/80">
-                  <p.icon size={20} />
+                  <Icon size={20} />
                 </div>
                 <div className="relative">
                   <h3 className="text-xl font-semibold tracking-tight">{p.title}</h3>
@@ -44,11 +40,12 @@ export function Problem() {
                 </div>
               </div>
             </FadeUp>
-          ))}
+            )
+          })}
           <FadeUp delay={0.3}>
             <p className="pt-8 text-2xl font-medium leading-snug tracking-tight sm:text-3xl">
-              Ogni errore ha la stessa radice:{' '}
-              <span className="font-serif text-neon-gradient">operare senza conferme.</span>
+              {c.closerA}{' '}
+              <span className="font-display uppercase text-neon-gradient">{c.closerB}</span>
             </p>
           </FadeUp>
         </div>
@@ -57,35 +54,9 @@ export function Problem() {
   )
 }
 
-const STEPS = [
-  {
-    kicker: 'Il metodo Zero Errori',
-    title: 'Un indicatore che sa aspettare.',
-    text: 'Lavora su TradingView, sul timeframe a 15 minuti. Non ti chiede di prevedere il mercato: ti chiede di attendere che il mercato confermi.',
-  },
-  {
-    kicker: 'Conferma 01',
-    title: 'La prima condizione si accende.',
-    text: 'Da sola non basta. Chi entra adesso sta scommettendo. Tu aspetti.',
-  },
-  {
-    kicker: 'Conferma 02',
-    title: 'Il quadro inizia a delinearsi.',
-    text: 'Due segnali concordano. È il punto in cui la maggior parte dei trader perde la pazienza.',
-  },
-  {
-    kicker: 'Conferma 03',
-    title: 'Quasi. Ma "quasi" non è un ingresso.',
-    text: 'Tre conferme su quattro. La disciplina vale proprio qui, nell\'ultimo metro.',
-  },
-  {
-    kicker: 'Conferma 04 · Segnale',
-    title: 'Ora, e solo ora, entri.',
-    text: 'Quattro conferme allineate, rischio fisso all\'1%. Ingresso con regole chiare invece che con l\'istinto.',
-  },
-]
-
 export function Method() {
+  const c = useCopy().method
+  const STEPS = c.steps
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   const [step, setStep] = useState(0)
@@ -154,14 +125,14 @@ export function Method() {
                     {Math.max(0, step)}/4
                   </div>
                   <div className={`mt-1 font-mono text-[9px] uppercase tracking-[0.25em] ${lit ? 'text-emerald' : 'text-mute'}`}>
-                    {lit ? 'Ingresso' : 'Attendi'}
+                    {lit ? c.go : c.wait}
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="absolute -bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full border border-line bg-coal/80 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-mute backdrop-blur">
-              <Lock size={11} className="text-neon" /> Le 4 conferme si svelano nel corso
+              <Lock size={11} className="text-neon" /> {c.badge}
             </div>
           </div>
         </div>

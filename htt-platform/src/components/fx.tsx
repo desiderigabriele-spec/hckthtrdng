@@ -10,7 +10,7 @@ export function RevealWords({ text, className = '', delay = 0 }: { text: string;
   return (
     <span ref={ref} className={className} aria-label={text}>
       {text.split(' ').map((w, i) => (
-        <span key={i} className="inline-block overflow-hidden align-bottom pb-[0.08em]" aria-hidden="true">
+        <span key={i} className="-mt-[0.2em] inline-block overflow-hidden pb-[0.08em] pt-[0.2em] align-bottom" aria-hidden="true">
           <motion.span
             className="inline-block"
             initial={{ y: '110%', rotate: 4 }}

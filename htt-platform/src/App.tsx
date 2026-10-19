@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { ModeProvider } from './context/ModeContext'
 import Landing from './pages/Landing'
 import Accedi from './pages/Accedi'
 import Area from './pages/Area'
@@ -32,7 +33,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<ModeProvider><Landing /></ModeProvider>} />
           <Route path="/accedi" element={<GuestOnly><Accedi /></GuestOnly>} />
           <Route path="/area" element={<Protected><Area /></Protected>} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,30 +1,29 @@
 import { ArrowUpRight, Check, X } from 'lucide-react'
 import { Counter, Eyebrow, FadeUp, RevealWords, Tilt } from '../components/fx'
 import { BACKTEST_URL, TIKTOK_URL } from '../config'
+import { useCopy } from '../context/ModeContext'
 
 const STATS = [
-  { value: 3.5, decimals: 1, suffix: '', label: 'Profit Factor', note: 'nel backtest pubblico su TradingView, da luglio a oggi' },
-  { value: 15, decimals: 0, suffix: 'm', label: 'Timeframe', note: 'decisioni ponderate, non riflessi da scalper' },
-  { value: 1, decimals: 0, suffix: '%', label: 'Rischio', note: 'massimo per singola operazione, sempre' },
-  { value: 4, decimals: 0, suffix: '', label: 'Conferme', note: 'richieste prima di ogni ingresso' },
+  { value: 3.5, decimals: 1, suffix: '', label: 'Profit Factor' },
+  { value: 15, decimals: 0, suffix: 'm', label: 'Timeframe' },
+  { value: 1, decimals: 0, suffix: '%', label: 'Rischio max' },
+  { value: 4, decimals: 0, suffix: '', label: 'Conferme' },
 ]
 
 export function Proof() {
+  const c = useCopy().proof
   return (
     <section id="risultati" className="relative mx-auto max-w-6xl px-6 py-28 sm:py-40">
       <div className="max-w-3xl">
         <Eyebrow>I numeri, non le promesse</Eyebrow>
-        <h2 className="text-[clamp(2.2rem,5vw,4rem)] font-bold leading-[1] tracking-tightest">
-          <RevealWords text="Testato. Pubblico." />
-          <span className="font-serif font-normal tracking-normal text-neon-light">
-            <RevealWords text="Verificabile." delay={0.25} />
+        <h2 key={c.titleA} className="text-[clamp(2.2rem,5vw,4rem)] leading-[1] tracking-tightest">
+          <RevealWords text={c.titleA} />
+          <span className="text-neon-light">
+            <RevealWords text={c.titleB} delay={0.25} />
           </span>
         </h2>
         <FadeUp delay={0.15}>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-bone/65">
-            Il backtest del metodo è visibile online su TradingView. Nessuno screenshot ritagliato:
-            puoi controllarlo tu, operazione per operazione.
-          </p>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-bone/65">{c.sub}</p>
         </FadeUp>
       </div>
 
@@ -37,7 +36,7 @@ export function Proof() {
                 <div className="mt-6 text-6xl font-bold tracking-tightest text-neon-gradient" style={{ transform: 'translateZ(40px)' }}>
                   <Counter to={s.value} decimals={s.decimals} suffix={s.suffix} />
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-bone/55">{s.note}</p>
+                <p className="mt-4 text-sm leading-relaxed text-bone/55">{c.notes[i]}</p>
               </div>
             </Tilt>
           </FadeUp>
@@ -46,10 +45,7 @@ export function Proof() {
 
       <FadeUp delay={0.2}>
         <div className="mt-10 flex flex-col gap-6 rounded-3xl border border-line bg-coal/50 p-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-2xl leading-relaxed text-bone/70">
-            <span className="text-bone">Cosa significa Profit Factor 3,5?</span> Che nel periodo testato, per ogni euro
-            perso dalle operazioni in perdita, quelle in profitto ne hanno generati 3,5.
-          </p>
+          <p className="max-w-2xl leading-relaxed text-bone/70">{c.explainer}</p>
           {BACKTEST_URL && (
             <a href={BACKTEST_URL} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-2 rounded-full border border-neon/40 px-6 py-3 text-sm text-neon-light transition-colors hover:bg-neon/10">
               Apri il backtest <ArrowUpRight size={16} />
@@ -64,23 +60,16 @@ export function Proof() {
   )
 }
 
-const ROWS = [
-  { k: 'Timeframe', bad: '1–3 minuti', good: '15 minuti' },
-  { k: 'Quando entri', bad: 'A impulso, a sensazione', good: 'Solo con 4 conferme allineate' },
-  { k: 'Rischio', bad: 'Variabile, "questa volta di più"', good: '1% fisso per operazione' },
-  { k: 'Tempo al grafico', bad: 'Ore, ogni giorno', good: 'Routine breve e definita' },
-  { k: 'Stato mentale', bad: 'Ansia, FOMO, rivincita', good: 'Lucidità e controllo' },
-]
-
 export function Compare() {
+  const c = useCopy().compare
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-28 sm:py-32">
       <div className="mx-auto max-w-2xl text-center">
         <Eyebrow>Due modi di fare trading</Eyebrow>
-        <h2 className="text-[clamp(2rem,4.5vw,3.6rem)] font-bold leading-[1.02] tracking-tightest">
-          <RevealWords text="Uno ti consuma." />
-          <span className="font-serif font-normal tracking-normal text-neon-light">
-            <RevealWords text="L'altro ti lascia vivere." delay={0.25} />
+        <h2 key={c.titleA} className="text-[clamp(2rem,4.5vw,3.6rem)] leading-[1.02] tracking-tightest">
+          <RevealWords text={c.titleA} />
+          <span className="text-neon-light">
+            <RevealWords text={c.titleB} delay={0.25} />
           </span>
         </h2>
       </div>
@@ -89,9 +78,9 @@ export function Compare() {
         <div className="mt-16 overflow-hidden rounded-3xl border border-line">
           <div className="grid grid-cols-[1fr_1fr] text-sm sm:grid-cols-[0.8fr_1fr_1fr]">
             <div className="hidden border-b border-line bg-coal p-5 sm:block" />
-            <div className="border-b border-line bg-coal p-5 font-mono text-[11px] uppercase tracking-[0.2em] text-alarm/80">Scalping compulsivo</div>
-            <div className="border-b border-l border-line bg-neon/[0.07] p-5 font-mono text-[11px] uppercase tracking-[0.2em] text-neon">Metodo Zero Errori</div>
-            {ROWS.map((r) => (
+            <div className="border-b border-line bg-coal p-5 font-mono text-[11px] uppercase tracking-[0.2em] text-alarm/80">{c.badLabel}</div>
+            <div className="border-b border-l border-line bg-neon/[0.07] p-5 font-mono text-[11px] uppercase tracking-[0.2em] text-neon">{c.goodLabel}</div>
+            {c.rows.map((r) => (
               <div key={r.k} className="contents">
                 <div className="hidden border-b border-line bg-coal/60 p-5 text-mute sm:block">{r.k}</div>
                 <div className="flex items-start gap-3 border-b border-line bg-coal/40 p-5 text-bone/45">
@@ -148,7 +137,7 @@ export function Team() {
         </div>
         <FadeUp delay={0.1}>
           <p className="max-w-lg text-lg leading-relaxed text-bone/65 lg:justify-self-end">
-            Niente guru senza volto e niente bot. Dietro Zero Errori c'è un team con ruoli precisi,
+            Niente guru senza volto e niente bot. Dietro il metodo c'è un team con ruoli precisi,
             che risponde in chat 24 ore su 24.
           </p>
         </FadeUp>

@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, Check, Lock, MessageCircle, Plus } from 'lucide-react'
 import { Eyebrow, FadeUp, Magnetic, RevealWords, TerminalBar, Tilt } from '../components/fx'
-import { CHAT_URL, TIKTOK_URL } from '../config'
+import { BRAND, CHAT_URL, TIKTOK_URL } from '../config'
+import { useCopy } from '../context/ModeContext'
 import { Logo } from './Hero'
 
-const chatFor = (pkg: string) => `${CHAT_URL.split('?')[0]}?text=${encodeURIComponent(`Ciao, vorrei informazioni sul percorso ${pkg} di Zero Errori.`)}`
+const chatFor = (pkg: string) => `${CHAT_URL.split('?')[0]}?text=${encodeURIComponent(`Ciao, vorrei informazioni sul percorso ${pkg} di ${BRAND}.`)}`
 
 const PACKAGES = [
   {
@@ -14,13 +15,12 @@ const PACKAGES = [
     name: 'Neofita',
     tagline: 'Parti da zero, con qualcuno accanto.',
     who: 'Per chi non ha mai fatto trading o ha iniziato da poco.',
-    featured: true,
-    items: [
+        items: [
       '12 videolezioni in 4 argomenti (3 lezioni ciascuno)',
       '5 sessioni one to one da 45 minuti di formazione e assistenza',
       'Indicatore trend a 4 conferme su TradingView',
       'Accesso alla community',
-      'Supporto 24/7 in chat, a vita',
+      'Supporto 24/7 in chat, senza scadenza',
     ],
   },
   {
@@ -28,19 +28,20 @@ const PACKAGES = [
     name: 'Esperto',
     tagline: 'Hai già esperienza. Ti serve precisione.',
     who: 'Per chi opera da 1-2 anni e vuole un metodo con regole chiare.',
-    featured: false,
-    items: [
+        items: [
       'Videocorso completo sulla strategia',
       'Manuale del metodo in PDF',
       '1 sessione one to one da 45 minuti',
       'Indicatore trend a 4 conferme su TradingView',
       'Accesso alla community',
-      'Supporto 24/7 in chat, a vita',
+      'Supporto 24/7 in chat, senza scadenza',
     ],
   },
 ]
 
 export function Packages() {
+  const c = useCopy().packages
+  const list = [...PACKAGES].sort((a) => (a.id === c.featured ? -1 : 1))
   return (
     <section id="percorsi" className="relative mx-auto max-w-6xl px-6 py-28 sm:py-40">
       <div aria-hidden="true" className="absolute left-1/2 top-1/3 h-[60vh] w-[60vh] -translate-x-1/2 rounded-full bg-neon/10 blur-[140px]" />
@@ -53,20 +54,20 @@ export function Packages() {
           </span>
         </h2>
         <FadeUp delay={0.15}>
-          <p className="mt-6 text-lg leading-relaxed text-bone/65">
-            In entrambi i percorsi l'accesso alla community e il supporto in chat restano attivi per sempre.
-          </p>
+          <p className="mt-6 text-lg leading-relaxed text-bone/65">{c.sub}</p>
         </FadeUp>
       </div>
 
       <div className="relative mt-16 grid gap-5 lg:grid-cols-2">
-        {PACKAGES.map((p, i) => (
+        {list.map((p, i) => {
+          const featured = p.id === c.featured
+          return (
           <FadeUp key={p.id} delay={i * 0.12}>
             <Tilt className="h-full rounded-[2rem]" max={5}>
-              <div className={`relative flex h-full flex-col overflow-hidden rounded-[2rem] p-8 sm:p-10 ${p.featured ? 'neon-border bg-gradient-to-b from-[#06180c] via-coal to-coal shadow-[0_40px_120px_-40px_rgba(0,255,65,0.45)]' : 'border border-line bg-coal'}`}>
-                {p.featured && (
+              <div className={`relative flex h-full flex-col overflow-hidden rounded-[2rem] p-8 sm:p-10 ${featured ? 'neon-border bg-gradient-to-b from-[#06180c] via-coal to-coal shadow-[0_40px_120px_-40px_rgba(0,255,65,0.45)]' : 'border border-line bg-coal'}`}>
+                {featured && (
                   <div className="absolute right-6 top-6 rounded-full bg-neon px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-ink">
-                    Il più completo
+                    Consigliato per te
                   </div>
                 )}
                 <TerminalBar label={`percorso_${p.id}.sh`} />
@@ -93,7 +94,7 @@ export function Packages() {
                     href={chatFor(p.name)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`group flex w-full items-center justify-center gap-3 rounded-full px-6 py-4 font-semibold transition-all ${p.featured ? 'btn-neon' : 'border border-neon/40 text-neon-light hover:bg-neon/10'}`}
+                    className={`group flex w-full items-center justify-center gap-3 rounded-full px-6 py-4 font-semibold transition-all ${featured ? 'btn-neon' : 'border border-neon/40 text-neon-light hover:bg-neon/10'}`}
                   >
                     Richiedi il percorso {p.name}
                     <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
@@ -103,7 +104,8 @@ export function Packages() {
               </div>
             </Tilt>
           </FadeUp>
-        ))}
+          )
+        })}
       </div>
     </section>
   )
@@ -143,17 +145,8 @@ export function Process() {
   )
 }
 
-const FAQS = [
-  { q: 'Devo avere esperienza per iniziare?', a: 'No. Il percorso Neofita parte dalle basi, con 12 videolezioni e 5 sessioni one to one in cui ti seguiamo passo dopo passo.' },
-  { q: 'Quanto tempo devo dedicarci?', a: 'Il metodo lavora sul timeframe a 15 minuti e non è scalping: non devi restare ore davanti al grafico. Ti insegniamo una routine breve e ripetibile.' },
-  { q: 'Su quale mercato si opera?', a: 'Il metodo è applicato principalmente all\'oro (XAU/USD), con l\'indicatore trend a 4 conferme su TradingView.' },
-  { q: 'Quanto capitale serve?', a: 'Il metodo prevede un rischio fisso dell\'1% per operazione, quindi si può iniziare anche con capitali contenuti. Ne parliamo in chat in base alla tua situazione.' },
-  { q: 'Il metodo garantisce guadagni?', a: 'No, e diffida di chi te lo promette. Il trading comporta sempre il rischio di perdere capitale. Ti diamo regole precise, strumenti e supporto per operare con disciplina e rischio controllato.' },
-  { q: 'Come ricevo l\'accesso al corso?', a: 'Dopo l\'iscrizione in chat ti inviamo le credenziali personali. Le usi per entrare nell\'area riservata, dove trovi lezioni, materiali e indicatore.' },
-  { q: 'Il supporto è davvero a vita?', a: 'Sì. La chat di supporto 24/7 e la community restano attive anche dopo aver completato il corso.' },
-]
-
 export function Faq() {
+  const FAQS = useCopy().faq
   const [open, setOpen] = useState<number | null>(0)
   return (
     <section id="faq" className="relative mx-auto max-w-6xl px-6 py-28 sm:py-32">
@@ -210,6 +203,7 @@ export function Faq() {
 }
 
 export function FinalCta() {
+  const c = useCopy().final
   return (
     <section className="relative overflow-hidden px-6 py-32 sm:py-48">
       <div aria-hidden="true" className="absolute left-1/2 top-1/2 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-neon/20 blur-[130px]" />
@@ -217,16 +211,12 @@ export function FinalCta() {
       <div aria-hidden="true" className="absolute left-1/2 top-1/2 h-[66vmin] w-[66vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border border-neon/[0.07]" />
       <div className="relative mx-auto max-w-4xl text-center">
         <h2 className="text-[clamp(2.6rem,7vw,6rem)] font-extrabold leading-[0.95] tracking-tightest">
-          <RevealWords text="Il prossimo errore" />
+          <RevealWords key={c.titleA} text={c.titleA} />
           <br />
-          <span className="font-serif font-normal tracking-normal">
-            <RevealWords text="puoi non farlo." className="text-neon-gradient" delay={0.3} />
-          </span>
+          <RevealWords key={c.titleB} text={c.titleB} className="text-neon-gradient" delay={0.3} />
         </h2>
         <FadeUp delay={0.3}>
-          <p className="mx-auto mt-8 max-w-lg text-lg text-bone/65">
-            Scrivici adesso. Ti risponde una persona del team e ti aiuta a capire quale percorso fa per te.
-          </p>
+          <p className="mx-auto mt-8 max-w-lg text-lg text-bone/65">{c.sub}</p>
           <div className="mt-12 flex justify-center">
             <Magnetic>
               <a href={CHAT_URL} target="_blank" rel="noopener noreferrer" className="btn-neon group inline-flex items-center gap-3 rounded-full px-10 py-5 text-lg font-semibold transition-shadow">
@@ -250,7 +240,7 @@ export function Footer() {
         <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <Logo />
-            <p className="mt-4 max-w-xs text-sm text-mute">Il metodo a 4 conferme sull'oro. Formazione, strumenti e supporto, a vita.</p>
+            <p className="mt-4 max-w-xs text-sm text-mute">Formazione sul trading dell'oro con metodo a 4 conferme. Corsi, strumenti e supporto.</p>
           </div>
           <div className="flex flex-wrap gap-x-10 gap-y-4 text-sm text-bone/70">
             <a href="#metodo" className="hover:text-bone">Metodo</a>
@@ -267,7 +257,7 @@ export function Footer() {
             hanno finalità esclusivamente formative e non costituiscono consulenza finanziaria né sollecitazione all'investimento.
             I risultati passati e di backtest non sono indicativi di risultati futuri.
           </p>
-          <p className="mt-6">© {new Date().getFullYear()} Team Zero Errori. Tutti i diritti riservati.</p>
+          <p className="mt-6">© {new Date().getFullYear()} {BRAND}. Tutti i diritti riservati.</p>
         </div>
       </div>
     </footer>
