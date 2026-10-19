@@ -64,41 +64,30 @@ function AuthedRedirect({ children }: { children: React.ReactNode }) {
 }
 
 function AppRoutes() {
-  const { session } = useAuth()
-
   return (
     <Routes>
       {/* Auth routes (no layout) */}
       <Route path="/login" element={<AuthedRedirect><Login /></AuthedRedirect>} />
       <Route path="/registrazione" element={<AuthedRedirect><Onboarding /></AuthedRedirect>} />
 
-      {/* Routes with Layout */}
+      {/* Routes with Layout — all public */}
       <Route element={<Layout />}>
-        {/* Public pages */}
         <Route path="/classifica" element={<Classifica />} />
         <Route path="/segnali" element={<Segnali />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/sfide" element={<Sfide />} />
+        <Route path="/sfide/:id" element={<SfidaLive />} />
+        <Route path="/profilo" element={<Profilo />} />
 
-        {/* Verified-only pages */}
-        <Route element={<PrivateOutlet requireVerified />}>
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/sfide" element={<Sfide />} />
-          <Route path="/sfide/:id" element={<SfidaLive />} />
-        </Route>
-
-        {/* Logged-in pages */}
-        <Route element={<PrivateOutlet />}>
-          <Route path="/profilo" element={<Profilo />} />
-        </Route>
-
-        {/* Admin pages */}
+        {/* Admin pages — still protected */}
         <Route element={<PrivateOutlet requireAdmin />}>
           <Route path="/admin" element={<Admin />} />
         </Route>
       </Route>
 
       {/* Default redirect */}
-      <Route path="/" element={<Navigate to={session ? '/chat' : '/login'} replace />} />
-      <Route path="*" element={<Navigate to={session ? '/chat' : '/login'} replace />} />
+      <Route path="/" element={<Navigate to="/chat" replace />} />
+      <Route path="*" element={<Navigate to="/chat" replace />} />
     </Routes>
   )
 }
