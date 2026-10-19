@@ -115,7 +115,7 @@ void main(){
 }
 `
 
-export default function GoldOrb({ className = '' }: { className?: string }) {
+export default function NeonOrb({ className = '' }: { className?: string }) {
   const hostRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

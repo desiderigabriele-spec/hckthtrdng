@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, Lock, Menu, X } from 'lucide-react'
-import GoldOrb from '../components/three/GoldOrb'
+import NeonOrb from '../components/three/NeonOrb'
 import { Magnetic, RevealWords } from '../components/fx'
 
 const NAV = [
@@ -113,7 +113,7 @@ export function Hero() {
       />
       <div aria-hidden="true" className="absolute right-[-10%] top-[10%] h-[70vh] w-[70vh] rounded-full bg-neon/20 blur-[140px]" />
 
-      <GoldOrb className="absolute inset-x-0 top-[3%] h-[50%] opacity-90 sm:inset-y-0 sm:left-auto sm:right-[-16%] sm:top-0 sm:h-full sm:w-[64%] sm:opacity-100" />
+      <NeonOrb className="absolute inset-x-0 top-[3%] h-[50%] opacity-90 sm:inset-y-0 sm:left-auto sm:right-[-16%] sm:top-0 sm:h-full sm:w-[64%] sm:opacity-100" />
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[72%] bg-gradient-to-t from-ink via-ink/85 to-transparent sm:hidden" />
 
       <motion.div style={{ y: textY, opacity: textOpacity }} className="relative z-10 mx-auto w-full max-w-6xl px-6">

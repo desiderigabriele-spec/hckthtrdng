@@ -111,14 +111,13 @@ export function Counter({ to, decimals = 0, prefix = '', suffix = '' }: { to: nu
 export function CursorGlow() {
   const x = useSpring(-500, { stiffness: 120, damping: 20 })
   const y = useSpring(-500, { stiffness: 120, damping: 20 })
-  const [enabled, setEnabled] = useState(false)
+  const [enabled] = useState(() => window.matchMedia('(pointer: fine)').matches)
   useEffect(() => {
-    if (!window.matchMedia('(pointer: fine)').matches) return
-    setEnabled(true)
+    if (!enabled) return
     const move = (e: PointerEvent) => { x.set(e.clientX); y.set(e.clientY) }
     window.addEventListener('pointermove', move, { passive: true })
     return () => window.removeEventListener('pointermove', move)
-  }, [x, y])
+  }, [enabled, x, y])
   if (!enabled) return null
   return (
     <motion.div
